@@ -6,9 +6,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/register")
+ */
+
 class RegisterController extends AbstractController
 {
-    #[Route('/register', name: 'register')]
+    public function __construct()
+    {
+
+    }
+
+    /**
+     * @Route("/register", name="connexion_register")
+     */
     public function register(): Response
     {
         return $this->render('register/index.html.twig', [
