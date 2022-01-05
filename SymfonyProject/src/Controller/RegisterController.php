@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
-use App\Form\LoginFormType;
+use App\Form\RegisterFormType;
 use App\Services\RegisterServices;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Exception\ExceptionInterface;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -27,12 +28,13 @@ class RegisterController extends AbstractController
     /**
      * @Route("/register", name="connexion_register")
      */
-    public function register(): Response
+    public function register(Request $request): Response
     {
         /** @var Form $form */
-        $form = $this->createForm(LoginFormType::class);
-
+        $form = $this->createForm(RegisterFormType::class);
+        $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
+            print_r("test");
             if ($form->getClickedButton() === $form->get('confirmer')) {
                 try {
                     $this->registerService->registerRequest($form);
