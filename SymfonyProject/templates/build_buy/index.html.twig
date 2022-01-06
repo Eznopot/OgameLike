@@ -1,0 +1,30 @@
+{% extends 'recycler.html.twig' %}
+
+{% block title %}Hello TechnologiesController!{% endblock %}
+
+{% block recycler_name %}Building{% endblock %}
+{% block recycler_subName %} Buy some Building {% endblock %}
+{% block recycler_explenation %} here you can buy building and get more resources {% endblock %}
+
+
+{% block body %}
+    {% for stats in BuildingsStats %}
+        <table class="table table-hover">
+            <tr class="table-secondary">
+                <th scope="row">{{ stats.name }}</th>
+                <td>{{stats.explaine}}</td>
+                <td>{{stats.explaineStats}}</td>
+                <td style="row">
+                    {% if not stats.actualUpgradeTime %}
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-sm btn-success">+1</button>
+                        </div>
+                    {% endif %}
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:{{ stats.actualUpgradeTime / stats.upgradeTime * 100 }}%;"></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    {% endfor %}
+{% endblock %}

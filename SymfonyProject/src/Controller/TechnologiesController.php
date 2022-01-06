@@ -20,7 +20,7 @@ class TechnologiesController extends AbstractController
                 'lvl' => 3,
 
                 'upgradeTime' => 5,
-                'actualUpgradeTime' => 0,
+                'actualUpgradeTime' => 2,
 
                 'name' => 'def',
                 'explaine' => 'this technology is for upgrade the unites damage',
