@@ -6,6 +6,30 @@
 {% block recycler_subName %} Upgrade your Technologies {% endblock %}
 {% block recycler_explenation %} here you can upgrade your technologies, that can have a big effect on your build or unites {% endblock %}
 
+{% block javascripts %} 
+  <script language = "javascript" 
+      src = "https://code.jquery.com/jquery-2.2.4.min.js"></script> 
+  
+  <script language = "javascript">
+      $(document).ready(function(){
+          $.ajax({  
+            url:        '/technologies/ajax',
+            type:       'POST',
+            dataType:   'json',
+            async:      true,
+            
+            success: function(data, status) {
+                $('#ajax').html('');
+                $('#ajax').append(data.html);
+            },  
+            error : function(xhr, textStatus, errorThrown) {
+                alert('Ajax request failed.');  
+            }  
+          });  
+        }); 
+  </script> 
+{% endblock %}
+
 {% block body %}
     {% for technologyStats in technolgiesStats %}
         <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
@@ -14,6 +38,8 @@
                 <h4 class="card-title">{{ technologyStats.explaine }}</h4>
                 <p class="card-text">{{ technologyStats.explaineStats }}</p>
             </div>
+
+            <div class="ajax"></div>
 
             <div style="row">
                 {% if not technologyStats.actualUpgradeTime %}

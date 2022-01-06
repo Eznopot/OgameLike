@@ -8,6 +8,28 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TechnologiesController extends AbstractController
 {
+    #[Route('/technologies/ajax', name: 'technologies_ajax')]
+    public function ajax(Request $request) {
+        $technologies = $this->getDoctrine()
+            ->getRepository(Technologies::class)
+            ->findAll();
+
+        if ($request->isXmlHttpRequest() || $request->query->get('showJson') == 1) {
+            $jsonData = array();
+            $idx = 0;
+            foreach($technologies as $technology) {
+                $temp = array(
+                    'technology' => $technology,
+                );
+                $jsonData[$idx++] = $temp;
+            } 
+            return new JsonResponse($jsonData);
+        }
+        else {
+            return $this->render('technologies/index.html.twig');
+        }
+    }
+
     #[Route('/technologies', name: 'technologies')]
     // public function index(ManagerRegistry $doctrine): Response
     public function index(): Response
