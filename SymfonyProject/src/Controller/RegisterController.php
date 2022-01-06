@@ -10,6 +10,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @Route("/register")
@@ -28,22 +29,25 @@ class RegisterController extends AbstractController
     /**
      * @Route("/register", name="connexion_register")
      */
-    public function register(Request $request): Response
+    public function register(Request $request, ManagerRegistry $doctrine): Response
     {
         /** @var Form $form */
         $form = $this->createForm(RegisterFormType::class);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
-            print_r("test");
             if ($form->getClickedButton() === $form->get('confirmer')) {
                 try {
-                    $this->registerService->registerRequest($form);
-                    $this->addFlash("success", "Registered");
+                    $res = $this->registerService->registerRequest($form, $doctrine);
+                    if ($res === 0) {
+                        $this->addFlash("success", "Registered");
+                        return $this->redirectToRoute('connexion_login');
+                    } else {
+                        $this->addFlash("Error", "Already Exist");
+                    }
+                    
                 } catch (ExceptionInterface $exception) {
                     $this->addFlash("error", $exception->getMessage());
                 }
-                return $this->redirectToRoute('connexion_login');
-
             }
         }
 
