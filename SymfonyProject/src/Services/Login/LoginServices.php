@@ -24,9 +24,6 @@ class LoginServices
         $user = $doctrine->getRepository(User::class)->findOneBy(['username' => $form->get('Email')->getData(),
                                                                 'password' => $form->get('Password')->getData()]);
         if (!$user) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
             return 1;
         }
         return 0;
