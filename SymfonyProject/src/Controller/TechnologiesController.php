@@ -14,20 +14,6 @@ class TechnologiesController extends AbstractController
     {
         // $technologies = $doctrine->getRepository(Technology::class)->findAll();
         // $ownedTechnologies = $doctrine->getRepository(Technology::class)->find($this->getUser()->getId());
-      
-
-        $response = new StreamedResponse();
-        // $response->setCallback(function () {
-        //     var_dump('Hello World');
-        //     flush();
-
-        //     sleep(2);
-
-        //     var_dump('Hello World 2');
-        //     flush();
-        // });
-
-        // $response->send();
 
         $goldPlayer = 10;
 
@@ -63,11 +49,8 @@ class TechnologiesController extends AbstractController
         ];
 
         return $this->render('technologies/index.html.twig', [
-            'controller_name' => 'TechnologiesController',
             'goldPlayer' => $goldPlayer,
             'technolgiesStats' => $technolgiesStats,
         ]);
     }
 }
-
-// "width: %;"
