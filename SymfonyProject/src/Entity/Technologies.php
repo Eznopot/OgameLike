@@ -37,6 +37,9 @@ class Technologies
     #[ORM\Column(type: 'integer', nullable: true)]
     private $goldBoostPerLevel;
 
+    #[ORM\Column(type: 'integer')]
+    private $upgradeTime;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -134,6 +137,18 @@ class Technologies
     public function setGoldBoostPerLevel(?int $goldBoostPerLevel): self
     {
         $this->goldBoostPerLevel = $goldBoostPerLevel;
+
+        return $this;
+    }
+
+    public function getUpgradeTime(): ?int
+    {
+        return $this->upgradeTime;
+    }
+
+    public function setUpgradeTime(int $upgradeTime): self
+    {
+        $this->upgradeTime = $upgradeTime;
 
         return $this;
     }

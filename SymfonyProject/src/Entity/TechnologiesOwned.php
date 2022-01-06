@@ -20,6 +20,15 @@ class TechnologiesOwned
     #[ORM\JoinColumn(nullable: false)]
     private $type;
 
+    #[ORM\Column(type: 'datetime')]
+    private $startupgrade;
+
+    #[ORM\Column(type: 'datetime')]
+    private $endupgrade;
+
+    #[ORM\Column(type: 'boolean')]
+    private $upgrading;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +54,42 @@ class TechnologiesOwned
     public function setType(?Technologies $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getStartupgrade(): ?\DateTimeInterface
+    {
+        return $this->startupgrade;
+    }
+
+    public function setStartupgrade(\DateTimeInterface $startupgrade): self
+    {
+        $this->startupgrade = $startupgrade;
+
+        return $this;
+    }
+
+    public function getEndupgrade(): ?\DateTimeInterface
+    {
+        return $this->endupgrade;
+    }
+
+    public function setEndupgrade(\DateTimeInterface $endupgrade): self
+    {
+        $this->endupgrade = $endupgrade;
+
+        return $this;
+    }
+
+    public function getUpgrading(): ?bool
+    {
+        return $this->upgrading;
+    }
+
+    public function setUpgrading(bool $upgrading): self
+    {
+        $this->upgrading = $upgrading;
 
         return $this;
     }
