@@ -5,10 +5,11 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -181,5 +182,11 @@ class User
         $this->userTechnoOwned->removeElement($userTechnoOwned);
 
         return $this;
+    }
+
+    public function eraseCredentials() {}
+    public function getSalt() {}
+    public function getRoles() {
+        return ["ROLE_USER"];
     }
 }

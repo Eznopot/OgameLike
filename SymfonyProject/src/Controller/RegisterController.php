@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/register")
@@ -29,15 +30,16 @@ class RegisterController extends AbstractController
     /**
      * @Route("/register", name="connexion_register")
      */
-    public function register(Request $request, ManagerRegistry $doctrine): Response
+    public function register(Request $request, ManagerRegistry $doctrine, UserPasswordEncoderInterface $encoder): Response
     {
         /** @var Form $form */
         $form = $this->createForm(RegisterFormType::class);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton() === $form->get('confirmer')) {
+                print_r("test");
                 try {
-                    $res = $this->registerService->registerRequest($form, $doctrine);
+                    $res = $this->registerService->registerRequest($form, $doctrine, $encoder);
                     if ($res === 0) {
                         $this->addFlash("success", "Registered");
                         return $this->redirectToRoute('connexion_login');

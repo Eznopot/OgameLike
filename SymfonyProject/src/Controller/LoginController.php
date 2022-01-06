@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
  * @Route("/connexion")
@@ -29,15 +30,15 @@ class LoginController extends AbstractController
     /**
      * @Route("/login", name="connexion_login")
      */
-    public function login(Request $request, ManagerRegistry $doctrine): Response
+    public function login(Request $request, ManagerRegistry $doctrine, AuthenticationUtils $authenticationUtils): Response
     {
         /** @var Form $form */
-        $form = $this->createForm(LoginFormType::class);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
+        //$form = $this->createForm(LoginFormType::class);
+        //$form->handleRequest($request);
+        /*if($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton() === $form->get('confirmer')) {
                 try {
-                    $result = $this->loginService->loginRequest($form, $doctrine);
+                    //$result = $this->loginService->loginRequest($form, $doctrine);
                     if ($result === 0) {
                         $this->addFlash("success", "Logged in");
                         return $this->redirectToRoute("home");
@@ -48,10 +49,10 @@ class LoginController extends AbstractController
                     $this->addFlash("error", $exception->getMessage());
                 }
             }
-        }
+        }*/
 
         return $this->render('login/index.html.twig', array(
-            "createLoginForm" => $form->createView()
+            //"createLoginForm" => $form->createView()
         ));
     }
 }
