@@ -36,10 +36,14 @@ class User
     #[ORM\ManyToMany(targetEntity: UnitsOwned::class)]
     private $unitsOwned;
 
+    #[ORM\ManyToMany(targetEntity: TechnologiesOwned::class)]
+    private $userTechnoOwned;
+
     public function __construct()
     {
         $this->batimentsOwned = new ArrayCollection();
         $this->unitsOwned = new ArrayCollection();
+        $this->userTechnoOwned = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -151,6 +155,30 @@ class User
     public function removeUnitsOwned(UnitsOwned $unitsOwned): self
     {
         $this->unitsOwned->removeElement($unitsOwned);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TechnologiesOwned[]
+     */
+    public function getUserTechnoOwned(): Collection
+    {
+        return $this->userTechnoOwned;
+    }
+
+    public function addUserTechnoOwned(TechnologiesOwned $userTechnoOwned): self
+    {
+        if (!$this->userTechnoOwned->contains($userTechnoOwned)) {
+            $this->userTechnoOwned[] = $userTechnoOwned;
+        }
+
+        return $this;
+    }
+
+    public function removeUserTechnoOwned(TechnologiesOwned $userTechnoOwned): self
+    {
+        $this->userTechnoOwned->removeElement($userTechnoOwned);
 
         return $this;
     }
