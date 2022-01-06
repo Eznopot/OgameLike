@@ -9,8 +9,26 @@ use Symfony\Component\Routing\Annotation\Route;
 class TechnologiesController extends AbstractController
 {
     #[Route('/technologies', name: 'technologies')]
+    // public function index(ManagerRegistry $doctrine): Response
     public function index(): Response
     {
+        // $technologies = $doctrine->getRepository(Technology::class)->findAll();
+        // $ownedTechnologies = $doctrine->getRepository(Technology::class)->find($this->getUser()->getId());
+      
+
+        $response = new StreamedResponse();
+        // $response->setCallback(function () {
+        //     var_dump('Hello World');
+        //     flush();
+
+        //     sleep(2);
+
+        //     var_dump('Hello World 2');
+        //     flush();
+        // });
+
+        // $response->send();
+
         $goldPlayer = 10;
 
         $technolgiesStats = [
@@ -28,7 +46,7 @@ class TechnologiesController extends AbstractController
             ],
             [
                 'upgradeTime' => 5,
-                'actualUpgradeTime' => 0,
+                'actualUpgradeTime' => 1,
 
                 'name' => 'attaque',
                 'explaine' => 'this technology is for upgrade the build damage',
@@ -36,7 +54,7 @@ class TechnologiesController extends AbstractController
             ],
             [
                 'upgradeTime' => 5,
-                'actualUpgradeTime' => 0,
+                'actualUpgradeTime' => 4,
 
                 'name' => 'trest2',
                 'explaine' => 'qeds',
