@@ -32,7 +32,7 @@ class Recycler extends Fixture
                 ->setGoldBoost(0)
                 ->setDamagePerLevel(5)
                 ->setGoldBoostPerLevel(0)
-                ->setUpgradeTime(10);
+                ->setUpgradeTime(120);
         $manager->persist($technoAttack);
 
         $technoGold = new Technologies();
@@ -44,7 +44,7 @@ class Recycler extends Fixture
                 ->setGoldBoost(0)
                 ->setDamagePerLevel(0)
                 ->setGoldBoostPerLevel(10)
-                ->setUpgradeTime(10);
+                ->setUpgradeTime(30);
         $manager->persist($technoGold);
 
         $type = ["damage", "unite", "gold"];
@@ -55,23 +55,16 @@ class Recycler extends Fixture
                 ->setPrice(rand(10, 15))
                 ->setLvlMax(10)
                 ->setImage("https://thumbs.dreamstime.com/b/buildings-line-icon-city-architecture-sign-skyscraper-building-vector-buildings-line-icon-city-architecture-sign-skyscraper-148085776.jpg")
-
                 ->setDamage($type[$rand] == "damage" ? rand(100, 200) : 0)
                 ->setLevel(0)
                 ->setHp(rand(500, 900))
-
                 ->setDamagePerLvl($type[$rand] == "damage" ? rand(20, 50) : 0)
                 ->setGoldPerHour($type[$rand] == "gold" ? rand(10, 50) : 0)
                 ->setHpPerLvl(rand(100, 300))
-
                 ->setGoldPerHourPerLvl($type[$rand] == "damage" ? rand(100, 200) : 0);
             $manager->persist($build);    
         }
 
-        // $buildingOwned = new BatimentOwned();
-        // for ($i=0; $i < 5; $i++) {
-
-        // }
 
 
         for ($i=0; $i < 4; $i++) {
@@ -83,26 +76,24 @@ class Recycler extends Fixture
                                     ->setStartupgrade(new \DateTime('now'))
                                     ->setEndupgrade(new \DateTime('now'))
                                     ->setUpgrading(false);
+            $manager->persist($technologiesOwnedAttack);
 
             $technologiesOwnedGold->setType($technoGold)
                                 ->setLevel(0)
                                 ->setStartupgrade(new \DateTime('now'))
                                 ->setEndupgrade(new \DateTime('now'))
                                 ->setUpgrading(false);
+            $manager->persist($technologiesOwnedGold);
 
             $user = new User();
-
             $hash = $this->encoder->encodePassword($user, '1234');
-            $user->setUsername('user_num_'.$i)
+            $user->setUsername('name'.$i.'@m')
                 ->setPassword($hash)
                 ->setGold(0)
                 ->setElo(0)
                 ->setImage("https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg")
                 ->addUserTechnoOwned($technologiesOwnedAttack)
                 ->addUserTechnoOwned($technologiesOwnedGold);
-
-            $manager->persist($technologiesOwnedAttack);
-            $manager->persist($technologiesOwnedGold);
             $manager->persist($user);
         }
 

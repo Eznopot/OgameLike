@@ -46,7 +46,6 @@ class RegisterController extends AbstractController
                     } else {
                         $this->addFlash("Error", "Already Exist");
                     }
-                    
                 } catch (ExceptionInterface $exception) {
                     $this->addFlash("error", $exception->getMessage());
                 }

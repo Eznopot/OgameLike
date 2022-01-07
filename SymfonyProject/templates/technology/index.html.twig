@@ -1,0 +1,71 @@
+{% extends 'recycler.html.twig' %}
+
+{% block title %}Hello TechnologyController!{% endblock %}
+
+{% block recycler_name %}Technologies{% endblock %}
+{% block recycler_subName %} Upgrade your Technologies {% endblock %}
+{% block recycler_explenation %} here you can upgrade your technologies, that can have a big effect on your build or unites {% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        function addWidthProgressBar(name, diffUpgrade, myDiffUpgrade) {
+            let diffUpgradeStamp = (diffUpgrade.s * 100 / 60) + (diffUpgrade.i * 100 / 60) * 100 + (diffUpgrade.h * 100 / 60) * 10000;
+            let myDiffUpgradeStamp = (myDiffUpgrade.s * 100 / 60) + (myDiffUpgrade.i * 100 / 60) * 100 + (myDiffUpgrade.h * 100 / 60) * 10000;
+            let progressBar = document.getElementById('progress_bar_' + name);
+            let width = 0;
+
+            setInterval(() => {
+                width = myDiffUpgradeStamp * 100 / diffUpgradeStamp;
+                progressBar.style = 'width: ' + width + '%;'
+
+                if (width > 99) {
+                    location.reload();
+                }
+
+                myDiffUpgradeStamp++;
+            }, 1000);
+        }
+    </script>
+{% endblock %}
+
+
+{% block body %}
+    {% for techno in technoOwned %}
+        <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+            <div class="card-header">{{ techno.type.name }}</div>
+            <div class="card-body">
+                <p class="card-title">{{ techno.type.description }}</p>
+                <p class="card-text">dmg : {{ techno.type.damagePerLevel }} | gold : {{ techno.type.goldBoostPerLevel }} </p>
+            </div>
+
+            <div class="progress m-3">
+                <div
+                    id="progress_bar_{{ techno.type.name }}"
+                    class="progress-bar progress-bar-striped progress-bar-animated" 
+                    role="progressbar" 
+                    aria-valuenow="75" 
+                    aria-valuemin="0" 
+                    aria-valuemax="100"
+                    style="width: 0%;"
+                ></div>
+                {% if techno.upgrading %}
+                    <script type="text/javascript">
+                        name = {{ techno.type.name | json_encode() | raw }};
+                        diffUpgrade = {{ date(techno.startupgrade).diff(date(techno.endupgrade)) | json_encode() | raw }};
+                        myDiffUpgrade = {{ date(techno.startupgrade).diff(date('now')) | json_encode() | raw }};
+                        addWidthProgressBar(name, diffUpgrade, myDiffUpgrade);
+                    </script>
+                {% endif %}
+            </div>
+            {% if not techno.upgrading %}
+                <div class="m-3">
+                    <form id="form_send_{{ techno.type.name }}" action="{{ path('technology') }}" method="post">
+                        <input id="input_send_{{ techno.type.name }}" name="type" value="{{ techno.type.id }}" style="display: none;">
+                        <button type="submit" class="btn btn-success">Upgrade</button>
+                        <p class="card-text">{{ techno.type.price }}$</p>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

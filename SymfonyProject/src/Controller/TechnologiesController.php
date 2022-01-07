@@ -7,10 +7,20 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\TechnologiesOwned;
-use App\Entity\Technologies;
+
+// use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ManagerRegistry;
+// use Doctrine\ORM\EntityManager;
 
 class TechnologiesController extends AbstractController
 {
+    // private ManagerRegistry $doctrine;
+
+    public function __construct()
+    {
+        // $this->doctrine = $doctrine;
+    }
+
     #[Route('/technologies/ajax', name: 'technologies_ajax')]
     public function ajax(Request $request) {
     }
@@ -18,20 +28,25 @@ class TechnologiesController extends AbstractController
     #[Route('/technologies', name: 'technologies')]
     public function index(): Response
     {
-        dump(new \DateTime());
         $request = Request::createFromGlobals();
         $upgradeId = $request->request->get('type');
 
         if ($upgradeId !== null) {
-            dump($this->getUser());
+            for ($i=0; $i < count($this->getUser()->getUserTechnoOwned()); $i++) {
+                if ($this->getUser()->getUserTechnoOwned()[$i]->getType()->getId() == $upgradeId) {
+                    $this->getUser()->getUserTechnoOwned()[$i]->setStartupgrade(new \DateTime('now'));
 
-            dump($upgradeId);
+                    $upgradeTime = $this->getUser()->getUserTechnoOwned()[$i]->getType()->getUpgradeTime();
+                    $endUpgrade = new \DateTime('now');
+                    $endUpgrade->add(new \DateInterval('PT'.$upgradeTime.'M'));
+                    $this->getUser()->getUserTechnoOwned()[$i]->setEndupgrade($endUpgrade);
+                }
+            }
         }
+        dump($this->getUser()->getUserTechnoOwned());
 
-        $technologies = $this->getDoctrine()->getRepository(Technologies::class)->findAll();
-        
         return $this->render('technologies/index.html.twig', [
-            'technolgiesStats' => $technologies
+            'technoOwned' => $this->getUser()->getUserTechnoOwned()
         ]);
     }
 }
