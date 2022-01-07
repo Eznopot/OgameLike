@@ -7,13 +7,15 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Technologies;
 use App\Entity\User;
 use App\Entity\Batiments;
+use App\Entity\BatimentOwned;
+use App\Entity\TechnologiesOwned;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class Recycler extends Fixture
 {
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $manager, UserPasswordEncoderInterface $encoder): void
     {
         $technoAttack = new Technologies();
-
         $technoAttack->setName("Attack")
                 ->setPrice(10)
                 ->setLvlMax(10)
@@ -37,16 +39,6 @@ class Recycler extends Fixture
                 ->setUpgradeTime(10);
         $manager->persist($technoGold);
 
-        for ($i=0; $i < 4; $i++) {
-            $user = new User();
-            $user->setUsername('user_num_'.$i)
-                ->setPassword('1234')
-                ->setGold(0)
-                ->setElo(0)
-                ->setImage("https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg");
-            $manager->persist($user);
-        }
-
         $type = ["damage", "unite", "gold"];
         for ($i=0; $i < 10; $i++) {
             $rand = rand(0, 2);
@@ -66,6 +58,29 @@ class Recycler extends Fixture
 
                 ->setGoldPerHourPerLvl($type[$rand] == "damage" ? rand(100, 200) : 0);
             $manager->persist($build);    
+        }
+
+        // $buildingOwned = new BatimentOwned();
+        // for ($i=0; $i < 5; $i++) {
+
+        // }
+
+
+        for ($i=0; $i < 4; $i++) {
+            $technologiesOwned = new technologiesOwned();
+
+            
+
+            $user = new User();
+
+            $hash = $encoder->encodePassword($user, '1234');
+            $user->setUsername('user_num_'.$i)
+                ->setPassword($hash)
+                ->setGold(0)
+                ->setElo(0)
+                ->setImage("https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg");
+
+            $manager->persist($user);
         }
 
         $manager->flush();
