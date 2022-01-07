@@ -8,19 +8,31 @@
 
 
 {% block body %}
-    <div class="gold-count">
-        Golds: {{ goldAmount }}
+<div>
+  <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+    <div class="card-body"/>
+      <p class="gold-count card-text">
+          Gold: {{ goldAmount }}
+      </p>
     </div>
-    <div class="unit-count">
-        Units: {{ unitAmount }}
+  </div>
+  <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+    <div class="card-body"/>
+      <p class="unit-count card-text">
+          Units: {{ unitAmount }}
+      </p>
     </div>
-    <div class="building-listing">
+  </div>
+  <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+    <div class="card-body">
+      <p class="building-listing card-text">
         <h5>Buildings:</h5>
         Gold Production: {{ goldBuilding }}<br>
         Unit Production: {{ unitBuilding }}<br>
         Defense: {{ defenseBuilding }}
+      </p>
+      <button type="button" class="btn btn-success">Build</button>
     </div>
-    <div>
-        <button type="button" class="btn btn-success">Build</button>
-    </div>
+  </div>
+</div>
 {% endblock %}
