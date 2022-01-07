@@ -22,7 +22,7 @@ class HomeController extends AbstractController
         $arrayOfBat = array();
         foreach ($batOwned as $elem) {
             array_push($arrayOfBat, $elem->getType());
-            $income += $elem->getType()->getGoldPerHour() * $elem->getLevel();
+            $income += $elem->getType()->getGoldPerHour() + $elem->getType()->getGoldPerHourPerLvl() * $elem->getLevel();
         }
 
         return $this->render('home/index.html.twig', [
@@ -31,6 +31,7 @@ class HomeController extends AbstractController
             'batiments_owned' => $arrayOfBat,
             'user_gold' => $user->getGold(),
             'gold_income' => $income,
+            'nb_unit' => $user->getUnits()
         ]);
     }
 }
