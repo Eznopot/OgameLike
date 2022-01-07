@@ -29,4 +29,15 @@ class GameController extends AbstractController
             "defenseBuilding" => 3
         ));
     }
+
+    /**
+     * @Route("/attack", name="attack_page")
+     */
+    public function attackPage() : Response {
+
+        return $this->render('game/attackPage.twig', array(
+            "unitAmount" => 100,
+            "planetList" => []
+        ));
+    }
 }
