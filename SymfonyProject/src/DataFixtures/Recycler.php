@@ -91,6 +91,7 @@ class Recycler extends Fixture
                 ->setPassword($hash)
                 ->setGold(0)
                 ->setElo(0)
+                ->setUnits($i)
                 ->setImage("https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg")
                 ->addUserTechnoOwned($technologiesOwnedAttack)
                 ->addUserTechnoOwned($technologiesOwnedGold);

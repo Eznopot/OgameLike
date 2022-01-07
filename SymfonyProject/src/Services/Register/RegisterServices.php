@@ -34,6 +34,7 @@ class RegisterServices
             print_r($hash);
             $user->setPassword($hash);
             $user->setGold(0);
+            $user->setUnits(0);
             $user->setElo(0);
             $entityManager->persist($user);
             $entityManager->flush();

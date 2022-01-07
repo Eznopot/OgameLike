@@ -34,17 +34,20 @@ class User implements UserInterface
     #[ORM\ManyToMany(targetEntity: BatimentOwned::class)]
     private $batimentsOwned;
 
-    #[ORM\ManyToMany(targetEntity: UnitsOwned::class)]
-    private $unitsOwned;
-
     #[ORM\ManyToMany(targetEntity: TechnologiesOwned::class)]
     private $userTechnoOwned;
+
+    #[ORM\Column(type: 'integer')]
+    private $units;
+
+    #[ORM\ManyToMany(targetEntity: OngoingAtk::class, mappedBy: 'playerID')]
+    private $ongoingAtks;
 
     public function __construct()
     {
         $this->batimentsOwned = new ArrayCollection();
-        $this->unitsOwned = new ArrayCollection();
         $this->userTechnoOwned = new ArrayCollection();
+        $this->ongoingAtks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -137,30 +140,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|UnitsOwned[]
-     */
-    public function getUnitsOwned(): Collection
-    {
-        return $this->unitsOwned;
-    }
-
-    public function addUnitsOwned(UnitsOwned $unitsOwned): self
-    {
-        if (!$this->unitsOwned->contains($unitsOwned)) {
-            $this->unitsOwned[] = $unitsOwned;
-        }
-
-        return $this;
-    }
-
-    public function removeUnitsOwned(UnitsOwned $unitsOwned): self
-    {
-        $this->unitsOwned->removeElement($unitsOwned);
-
-        return $this;
-    }
-
-    /**
      * @return Collection|TechnologiesOwned[]
      */
     public function getUserTechnoOwned(): Collection
@@ -188,5 +167,44 @@ class User implements UserInterface
     public function getSalt() {}
     public function getRoles() {
         return ["ROLE_USER"];
+    }
+
+    public function getUnits(): ?int
+    {
+        return $this->units;
+    }
+
+    public function setUnits(int $units): self
+    {
+        $this->units = $units;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OngoingAtk[]
+     */
+    public function getOngoingAtks(): Collection
+    {
+        return $this->ongoingAtks;
+    }
+
+    public function addOngoingAtk(OngoingAtk $ongoingAtk): self
+    {
+        if (!$this->ongoingAtks->contains($ongoingAtk)) {
+            $this->ongoingAtks[] = $ongoingAtk;
+            $ongoingAtk->addPlayerID($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOngoingAtk(OngoingAtk $ongoingAtk): self
+    {
+        if ($this->ongoingAtks->removeElement($ongoingAtk)) {
+            $ongoingAtk->removePlayerID($this);
+        }
+
+        return $this;
     }
 }
