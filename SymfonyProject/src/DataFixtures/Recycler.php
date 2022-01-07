@@ -9,11 +9,19 @@ use App\Entity\User;
 use App\Entity\Batiments;
 use App\Entity\BatimentOwned;
 use App\Entity\TechnologiesOwned;
+
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class Recycler extends Fixture
 {
-    public function load(ObjectManager $manager, UserPasswordEncoderInterface $encoder): void
+    private UserPasswordEncoderInterface $encoder;
+
+    public function __construct(UserPasswordEncoderInterface $encoder)
+    {
+        $this->encoder = $encoder;
+    }
+
+    public function load(ObjectManager $manager): void
     {
         $technoAttack = new Technologies();
         $technoAttack->setName("Attack")
@@ -67,19 +75,34 @@ class Recycler extends Fixture
 
 
         for ($i=0; $i < 4; $i++) {
-            $technologiesOwned = new technologiesOwned();
+            $technologiesOwnedAttack = new technologiesOwned();
+            $technologiesOwnedGold = new technologiesOwned();
 
-            
+            $technologiesOwnedAttack->setType($technoAttack)
+                                    ->setLevel(0)
+                                    ->setStartupgrade(new \DateTime('now'))
+                                    ->setEndupgrade(new \DateTime('now'))
+                                    ->setUpgrading(false);
+
+            $technologiesOwnedGold->setType($technoGold)
+                                ->setLevel(0)
+                                ->setStartupgrade(new \DateTime('now'))
+                                ->setEndupgrade(new \DateTime('now'))
+                                ->setUpgrading(false);
 
             $user = new User();
 
-            $hash = $encoder->encodePassword($user, '1234');
+            $hash = $this->encoder->encodePassword($user, '1234');
             $user->setUsername('user_num_'.$i)
                 ->setPassword($hash)
                 ->setGold(0)
                 ->setElo(0)
-                ->setImage("https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg");
+                ->setImage("https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg")
+                ->addUserTechnoOwned($technologiesOwnedAttack)
+                ->addUserTechnoOwned($technologiesOwnedGold);
 
+            $manager->persist($technologiesOwnedAttack);
+            $manager->persist($technologiesOwnedGold);
             $manager->persist($user);
         }
 
