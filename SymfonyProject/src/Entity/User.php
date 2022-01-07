@@ -34,16 +34,15 @@ class User implements UserInterface
     #[ORM\ManyToMany(targetEntity: BatimentOwned::class)]
     private $batimentsOwned;
 
-    #[ORM\ManyToMany(targetEntity: UnitsOwned::class)]
-    private $unitsOwned;
-
     #[ORM\ManyToMany(targetEntity: TechnologiesOwned::class)]
     private $userTechnoOwned;
+
+    #[ORM\Column(type: 'integer')]
+    private $units;
 
     public function __construct()
     {
         $this->batimentsOwned = new ArrayCollection();
-        $this->unitsOwned = new ArrayCollection();
         $this->userTechnoOwned = new ArrayCollection();
     }
 
@@ -137,30 +136,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|UnitsOwned[]
-     */
-    public function getUnitsOwned(): Collection
-    {
-        return $this->unitsOwned;
-    }
-
-    public function addUnitsOwned(UnitsOwned $unitsOwned): self
-    {
-        if (!$this->unitsOwned->contains($unitsOwned)) {
-            $this->unitsOwned[] = $unitsOwned;
-        }
-
-        return $this;
-    }
-
-    public function removeUnitsOwned(UnitsOwned $unitsOwned): self
-    {
-        $this->unitsOwned->removeElement($unitsOwned);
-
-        return $this;
-    }
-
-    /**
      * @return Collection|TechnologiesOwned[]
      */
     public function getUserTechnoOwned(): Collection
@@ -188,5 +163,17 @@ class User implements UserInterface
     public function getSalt() {}
     public function getRoles() {
         return ["ROLE_USER"];
+    }
+
+    public function getUnits(): ?int
+    {
+        return $this->units;
+    }
+
+    public function setUnits(int $units): self
+    {
+        $this->units = $units;
+
+        return $this;
     }
 }

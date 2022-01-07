@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\atkServices;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,10 +35,14 @@ class GameController extends AbstractController
      * @Route("/attack", name="attack_page")
      */
     public function attackPage() : Response {
+        $atkServices = new atkServices();
 
+        $planetArray = $atkServices->getPlanetList($this->getDoctrine());
+        $ongoingAtk = $atkServices->getAtkList($this->getDoctrine());
         return $this->render('game/attackPage.twig', array(
             "unitAmount" => 100,
-            "planetList" => []
+            "planetList" => $planetArray,
+            "atkList" => $ongoingAtk
         ));
     }
 }
