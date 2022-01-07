@@ -1,13 +1,23 @@
-{% extends 'base.html.twig' %}
+{% extends 'recycler.html.twig' %}
 
 {% block title %}
     Game!
 {% endblock %}
 
-{% block recycler_name %}Resources{% endblock %}
-{% block recycler_subName %}Inventory of resources{% endblock %}
+{% block recycler_name %}Planets{% endblock %}
+{% block recycler_subName %}List of planets{% endblock %}
 
 {% block body %}
+    <style>
+        .dot {
+            background-color: forestgreen;
+            height: 25px;
+            width: 25px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+
     <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
         <div class="card-body"/>
         <p class="unit-count card-text">
@@ -17,8 +27,16 @@
     </div>
     <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
         <div class="card-body">
-            <p class="building-listing card-text">
-
+            <p class="planet-listing card-text">
+                {% for planet in planetList %}
+                    <div class="planet">
+                        <span class="dot"></span>
+                        Name: {{ planet.name }}
+                        Defense level: {{ planet.defenseLvl }}
+                        Distance: {{ planet.distance }}
+                        Is under attack: {{ planet.isUnderAtk() }}
+                    </div>
+                {% endfor %}
             </p>
         </div>
     </div>

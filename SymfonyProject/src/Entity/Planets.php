@@ -22,8 +22,8 @@ class Planets
     #[ORM\Column(type: 'integer', nullable: true)]
     private $distance;
 
-    #[ORM\Column(type: 'boolean')]
-    private $underAtk;
+    #[ORM\OneToOne(mappedBy: 'planetID', targetEntity: OngoingAtk::class, cascade: ['persist', 'remove'])]
+    private $ongoingAtk;
 
     public function getId(): ?int
     {
@@ -66,14 +66,26 @@ class Planets
         return $this;
     }
 
-    public function getUnderAtk(): ?bool
+    public function isUnderAtk(): ?bool
     {
-        return $this->underAtk;
+        if($this->getOngoingAtk() != null)
+            return true;
+        return false;
     }
 
-    public function setUnderAtk(bool $underAtk): self
+    public function getOngoingAtk(): ?OngoingAtk
     {
-        $this->underAtk = $underAtk;
+        return $this->ongoingAtk;
+    }
+
+    public function setOngoingAtk(OngoingAtk $ongoingAtk): self
+    {
+        // set the owning side of the relation if necessary
+        if ($ongoingAtk->getPlanetID() !== $this) {
+            $ongoingAtk->setPlanetID($this);
+        }
+
+        $this->ongoingAtk = $ongoingAtk;
 
         return $this;
     }

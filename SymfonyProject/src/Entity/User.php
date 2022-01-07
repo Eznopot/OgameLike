@@ -40,10 +40,14 @@ class User implements UserInterface
     #[ORM\Column(type: 'integer')]
     private $units;
 
+    #[ORM\ManyToMany(targetEntity: OngoingAtk::class, mappedBy: 'playerID')]
+    private $ongoingAtks;
+
     public function __construct()
     {
         $this->batimentsOwned = new ArrayCollection();
         $this->userTechnoOwned = new ArrayCollection();
+        $this->ongoingAtks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -173,6 +177,33 @@ class User implements UserInterface
     public function setUnits(int $units): self
     {
         $this->units = $units;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OngoingAtk[]
+     */
+    public function getOngoingAtks(): Collection
+    {
+        return $this->ongoingAtks;
+    }
+
+    public function addOngoingAtk(OngoingAtk $ongoingAtk): self
+    {
+        if (!$this->ongoingAtks->contains($ongoingAtk)) {
+            $this->ongoingAtks[] = $ongoingAtk;
+            $ongoingAtk->addPlayerID($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOngoingAtk(OngoingAtk $ongoingAtk): self
+    {
+        if ($this->ongoingAtks->removeElement($ongoingAtk)) {
+            $ongoingAtk->removePlayerID($this);
+        }
 
         return $this;
     }

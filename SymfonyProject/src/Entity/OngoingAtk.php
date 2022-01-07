@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OngoingAtkRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OngoingAtkRepository::class)]
@@ -25,11 +27,17 @@ class OngoingAtk
     #[ORM\Column(type: 'integer')]
     private $timeOfAtk;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\OneToOne(inversedBy: 'ongoingAtk', targetEntity: Planets::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
     private $planetID;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'ongoingAtks')]
     private $playerID;
+
+    public function __construct()
+    {
+        $this->playerID = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -84,26 +92,38 @@ class OngoingAtk
         return $this;
     }
 
-    public function getPlanetID(): ?int
+    public function getPlanetID(): ?Planets
     {
         return $this->planetID;
     }
 
-    public function setPlanetID(int $planetID): self
+    public function setPlanetID(Planets $planetID): self
     {
         $this->planetID = $planetID;
 
         return $this;
     }
 
-    public function getPlayerID(): ?int
+    /**
+     * @return Collection|User[]
+     */
+    public function getPlayerID(): Collection
     {
         return $this->playerID;
     }
 
-    public function setPlayerID(int $playerID): self
+    public function addPlayerID(User $playerID): self
     {
-        $this->playerID = $playerID;
+        if (!$this->playerID->contains($playerID)) {
+            $this->playerID[] = $playerID;
+        }
+
+        return $this;
+    }
+
+    public function removePlayerID(User $playerID): self
+    {
+        $this->playerID->removeElement($playerID);
 
         return $this;
     }
