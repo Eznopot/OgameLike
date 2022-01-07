@@ -28,8 +28,7 @@ class TechnologiesController extends AbstractController
         }
 
         $technologies = $this->getDoctrine()->getRepository(Technologies::class)->findAll();
-
-
+        
         return $this->render('technologies/index.html.twig', [
             'technolgiesStats' => $technologies
         ]);
