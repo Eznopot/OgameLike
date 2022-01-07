@@ -10,7 +10,15 @@
 
 <div class="example-wrapper">
     <h1>Home</h1>
-    <div class="card" style="overflow:scroll; height:400px; float: right; padding: 1rem;">
+    <div class="card" style="margin: 0 auto; width: 20rem;">
+        <div class="card-header"> Gold </div>
+            <div class="card-body">
+                <p class="card-title">{{ user_gold }}</p>
+                <p class="card-text"> {{ gold_income }}/h </p>
+            </div>
+        </div>
+    </div>
+    <div class="card" style="overflow:scroll; height:400px; float: left; padding: 1rem;">
         <h2>Your Technologies</h2>
     {% for elem in technos_owned %}
         <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
@@ -22,7 +30,7 @@
         </div>
     {% endfor %}
     </div>
-    <div class="card" style="overflow:scroll; height:400px; float: left; padding: 1rem;">
+    <div class="card" style="overflow:scroll; height:400px; float: right; padding: 1rem;">
     <h2>Your Batiments</h2>
     {% for elem in batiments_owned %}
         <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">

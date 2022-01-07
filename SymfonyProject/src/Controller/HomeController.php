@@ -12,6 +12,7 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         $user = $this->getUser();
+        $income = 0;
         $technoOwned = $user->getUserTechnoOwned();
         $batOwned = $user->getBatimentsOwned();
         $arrayOfTechno = array();
@@ -21,12 +22,15 @@ class HomeController extends AbstractController
         $arrayOfBat = array();
         foreach ($batOwned as $elem) {
             array_push($arrayOfBat, $elem->getType());
+            $income += $elem->getType()->getGoldPerHour() * $elem->getLevel();
         }
 
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
             'technos_owned' => $arrayOfTechno,
-            'batiments_owned' => $arrayOfBat
+            'batiments_owned' => $arrayOfBat,
+            'user_gold' => $user->getGold(),
+            'gold_income' => $income,
         ]);
     }
 }
