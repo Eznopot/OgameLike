@@ -13,7 +13,7 @@ class PlayerController extends AbstractController
     #[Route('/player', name: 'player')]
     public function index(): Response
     {
-        $id = 0;
+        $id = 1;
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         if ($user)
           $image = base64_encode(stream_get_contents($user->getImage()));

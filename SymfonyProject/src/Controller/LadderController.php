@@ -18,7 +18,7 @@ class LadderController extends AbstractController
         $players = $this->getDoctrine()->getRepository(User::class)->findAll();
         
         usort($players, function ($a, $b) {
-          return $a.elo > $b.elo;
+          return $a->getElo() > $b->getElo();
         });
         
         return $this->render('ladder/index.html.twig', [
