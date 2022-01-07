@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Game!
+{% endblock %}
+
+{% block recycler_name %}Resources{% endblock %}
+{% block recycler_subName %}Inventory of resources{% endblock %}
+
+{% block body %}
+    <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+        <div class="card-body"/>
+        <p class="unit-count card-text">
+            Units available: {{ unitAmount }}
+        </p>
+    </div>
+    </div>
+    <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+        <div class="card-body">
+            <p class="building-listing card-text">
+
+            </p>
+        </div>
+    </div>
+    </div>
+{% endblock %}
