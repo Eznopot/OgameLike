@@ -32,6 +32,7 @@
 {% endblock %}
 
 {% block body %}
+  <div style="flex-wrap: wrap; display: flex;">
     {% for techno in technoOwned %}
         <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
             <div class="card-header">{{ techno.type.name }}</div>
@@ -70,4 +71,5 @@
             {% endif %}
         </div>
     {% endfor %}
+  </div>
 {% endblock %}
