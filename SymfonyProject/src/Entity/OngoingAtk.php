@@ -22,9 +22,6 @@ class OngoingAtk
     private $difficuly;
 
     #[ORM\Column(type: 'integer')]
-    private $numberOfUnits;
-
-    #[ORM\Column(type: 'integer')]
     private $timeOfAtk;
 
     #[ORM\OneToOne(inversedBy: 'ongoingAtk', targetEntity: Planets::class, cascade: ['persist', 'remove'])]
@@ -64,18 +61,6 @@ class OngoingAtk
     public function setDifficuly(int $difficuly): self
     {
         $this->difficuly = $difficuly;
-
-        return $this;
-    }
-
-    public function getNumberOfUnits(): ?int
-    {
-        return $this->numberOfUnits;
-    }
-
-    public function setNumberOfUnits(int $numberOfUnits): self
-    {
-        $this->numberOfUnits = $numberOfUnits;
 
         return $this;
     }
