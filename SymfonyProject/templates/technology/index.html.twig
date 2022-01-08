@@ -8,6 +8,9 @@
 
 {% block javascripts %}
     <script type="text/javascript">
+        if (window.history.replaceState) {
+            window.history.replaceState( null, null, window.location.href );
+        }
         function addWidthProgressBar(name, diffUpgrade, myDiffUpgrade) {
             let diffUpgradeStamp = (diffUpgrade.s * 100 / 60) + (diffUpgrade.i * 100 / 60) * 100 + (diffUpgrade.h * 100 / 60) * 10000;
             let myDiffUpgradeStamp = (myDiffUpgrade.s * 100 / 60) + (myDiffUpgrade.i * 100 / 60) * 100 + (myDiffUpgrade.h * 100 / 60) * 10000;
