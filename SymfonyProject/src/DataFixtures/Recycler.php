@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Planets;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Technologies;
@@ -113,7 +114,14 @@ class Recycler extends Fixture
             }
             $manager->persist($user);
         }
-
+        $planet = new Planets();
+        $planet->setName("Neptune")
+            ->setDefenseLvl(2)
+            ->setDistance(1200);
+        $manager->persist($planet);
+        $planet->setName("Pluto")
+            ->setDistance(500);
+        $manager->persist($planet);
         $manager->flush();
     }
 }
