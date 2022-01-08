@@ -9,7 +9,9 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Home</h1>
+    <div class="row justify-content-center" style="text-align: center;">
+      <h1>Home</h1>
+    </div>
     <div>
         <div class="card" style="margin: 0 auto; width: 20rem;">
             <div class="card-header"> Gold </div>
@@ -19,6 +21,7 @@
                 </div>
             </div>
         </div>
+        <br />
         <div class="card" style="margin: 0 auto; width: 20rem;">
             <div class="card-header"> Unit </div>
                 <div class="card-body">
@@ -29,29 +32,38 @@
     </div>
     <br/>
     <div>
-        <div class="card" style="overflow:scroll; height:400px; float: left; padding: 1rem;">
-            <h2>Your Technologies</h2>
-        {% for elem in technos_owned %}
-            <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
-                <div class="card-header"> {{ elem.name }}</div>
-                <div class="card-body">
-                    <p class="card-title">{{ elem.description }}</p>
-                    <p class="card-text">dmg : {{ elem.damagePerLevel }} | gold : {{ elem.goldBoostPerLevel }} </p>
+        <div class="card" style="overflow:auto; height: 32.5rem; float: left; padding: 1rem; width: 50%">
+          <div class="row justify-content-center" style="text-align: center;">
+            <h1>Your Technologies</h1>
+          </div>
+          <br/>
+          <div style="overflow:auto; flex-wrap: wrap; display: flex;">
+            {% for elem in technos_owned %}
+                <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+                    <div class="card-header"> {{ elem.name }}</div>
+                    <div class="card-body">
+                        <p class="card-title">{{ elem.description }}</p>
+                        <p class="card-text">dmg : {{ elem.damagePerLevel }} | gold : {{ elem.goldBoostPerLevel }} </p>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+          </div>
         </div>
-        <div class="card" style="overflow:scroll; height:400px; float: right; padding: 1rem;">
-        <h2>Your Batiments</h2>
-        {% for elem in batiments_owned %}
-            <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
-                <div class="card-header"> {{ elem.name }}</div>
-                <div class="card-body">
-                    <p class="card-title">{{ elem.description }}</p>
-                    <p class="card-text">dmg : {{ elem.damagePerLevel }} | gold : {{ elem.goldBoostPerLevel }} </p>
+        <div class="card" style="overflow:auto; height: 32.5rem; float: right; padding: 1rem; width: 50%">
+          <div class="row justify-content-center" style="text-align: center;">
+            <h1>Your Batiments</h1>
+          </div>
+          <br/>
+          <div style="overflow:auto; flex-wrap: wrap; display: flex;">
+            {% for elem in batiments_owned %}
+                <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+                    <div class="card-header"> {{ elem.name }}</div>
+                    <div class="card-body">
+                        <p class="card-text">dmg : {{ elem.damagePerLvl }} | gold : {{ elem.goldPerHourPerLvl }} | hp: {{ elem.hpPerLvl }}</p>
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+          </div>
         </div>
     </div>
 </div>
