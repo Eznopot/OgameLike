@@ -62,8 +62,10 @@ class GameController extends AbstractController
             $atk->setDifficuly((5 - $planet->getDefenseLvl()) * 20 + ($unitNbr*2))
                 ->setStart(time())
                 ->setTimeOfAtk($planet->getDistance())
-                ->setPlanetID($planet->getId());
-
+                ->addPlayerID($this->getUser())
+                ->setPlanetID($planet);
+            $em->persist($atk);
+            $em->flush();
         }
 
         return $this->render('game/attackPage.twig', array(
