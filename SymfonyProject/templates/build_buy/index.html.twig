@@ -58,6 +58,8 @@
                     {% endfor %}
                     {% if isBuy %}
                       <p class="card-text">Owned: {{isBuy}}</br>Price: {{ building.price }}$</p>
+                    {% else %}
+                      <p class="card-text">Price: {{ building.price }}$</p>
                     {% endif %}
                     {% if myBuilding.upgrading is defined and myBuilding.upgrading %}
                     {% else %}
