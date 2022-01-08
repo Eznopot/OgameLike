@@ -33,10 +33,11 @@
 
 {% block body %}
     {% for buildings in allBuilding %}
+      {% set categoryIndex = loop.index - 1 %}
         <div class="card text-white bg-primary mb-3 p-3">
-          <h1> {{ category[loop.index - 1] }} </h1>
+          <h1> {{ category[categoryIndex] }} </h1>
           <div style="flex-wrap: wrap; display: flex;">
-            {% for building in buildings %}
+              {% for building in buildings %}
                 {% set myBuilding = null %}
                 {% set isBuy = 0 %}
 
@@ -53,8 +54,16 @@
                   <div class="card-body">
                     <p class="card-title">Stats:</p>
                     <div>
-                        <p class="text-muted"> lvl : {{myBuilding.level}} |  hp : {{building.hp}} </p>
-                        <p class="text-muted">gold production : {{building.goldPerHour}} | damage : {{building.damage}}</p>
+                        {% if myBuilding %}
+                          <p class="text-muted"> lvl : {{myBuilding.level}} |  hp : {{building.hp}}</p>
+                        {% endif %}
+                        {% if category[categoryIndex] == "gold"%}
+                          <p class="text-muted">gold production : {{building.goldPerHour}}</p>
+                        {% elseif category[categoryIndex] == "damage"%}
+                          <p class="text-muted">damage : {{building.damage}}</p>
+                        {% else %}
+                          <p class="text-muted">unite production : {{building.unitesPerHour}}</p>
+                        {% endif %}
                     </div>
                   </div>
                   <div class="card-body">

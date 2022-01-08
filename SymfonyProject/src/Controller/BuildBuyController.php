@@ -96,6 +96,7 @@ class BuildBuyController extends AbstractController
             'unite',
             'damage'
         );
+        dump($goldBuilding);
         return $this->render('build_buy/index.html.twig', [
             'category' => $category,
             'allBuilding' => [$goldBuilding, $uniteBuilding, $damageBuilding],
