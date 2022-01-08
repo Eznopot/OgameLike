@@ -33,87 +33,72 @@
 
 {% block body %}
     {% for buildings in allBuilding %}
-        <div class="card text-white bg-primary mb-3 p-3" style="max-width: 70rem;">
-            <h1> categorie name </h1>
+        <div class="card text-white bg-primary mb-3 p-3">
+          <h1> {{ category[loop.index - 1] }} </h1>
+          <div style="flex-wrap: wrap; display: flex;">
             {% for building in buildings %}
-
                 {% set myBuilding = null %}
                 {% set isBuy = 0 %}
-
-                <table class="table table-hover">
-                    <tr class="table-dark">
-                        <th scope="row">{{building.name}}</th>
-                        <th>
-                            <img style="width: 100px;" src={{ building.image }}>
-                        </th>
-                        <td>
-                            <div style="content: ""; display: table; clear: left;">
-                                <div style="float: left; width: 50%;">
-                                    <p class="text-muted">statistiques</p>
-                                </div>
-                                <div style="float: left; width: 50%;">
-                                    <p class="text-muted">hp : {{building.hp}} |  lvl : {{building.level}}</p>
-                                    <p class="text-muted">gold production : {{building.goldPerHour}} | damage : {{building.damage}}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-
-                                {% for buildingOwned in buildingsOwned %}
-                                    {% if buildingOwned.type.id == building.id %}
-                                        {% set isBuy = isBuy + 1 %}
-                                        {% set myBuilding = buildingOwned %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% if myBuilding.upgrading is defined and myBuilding.upgrading %}
-                                {% else %}
-                                    <form action="{{ path('build_buy') }}" method="post">
-                                        <input name="buy" value="{{ building.id }}" style="display: none;">
-                                        <button type="submit" class="btn btn-sm btn-success">Buy</button>
-                                        {% if isBuy %}
-                                            <p class="card-text">{{isBuy}}</p>
-                                        {% endif %}
-                                    </form>
-                                    <br>
-                                    {% if isBuy %}
-                                        <form action="{{ path('build_buy') }}" method="post">
-                                            <input name="upgrade" value="{{ building.id }}" style="display: none;">
-                                            <button type="submit" class="btn btn-sm btn-success">Upgrade</button>
-                                        </form>
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                <p class="card-text">{{ building.price }}$</p>
-                                <p class="card-text">{{ building.upgradeTime }} Secondes</p>
-                            </div>
-                            <div class="progress" style="width: 100px">
-                                <div
-                                    id="progress_bar_{{ building.id }}"
-                                    class="progress-bar progress-bar-striped progress-bar-animated"
-                                    role="progressbar"
-                                    aria-valuenow="75"
-                                    aria-valuemin="0"
-                                    aria-valuemax="100"
-                                    style="width:0%;">
-                                </div>
-                                {% if isBuy and myBuilding.upgrading %}
-                                    <script type="text/javascript">
-                                        name = {{ myBuilding.type.id | json_encode() | raw }};
-                                        diffUpgrade = {{ date(myBuilding.startupgrade).diff(date(myBuilding.endupgrade)) | json_encode() | raw }};
-                                        myDiffUpgrade = {{ date(myBuilding.startupgrade).diff(date('now')) | json_encode() | raw }};
-                                        addWidthProgressBar(name, diffUpgrade, myDiffUpgrade);
-                                    </script>
-                                {% endif %}
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+                <div class="card" style="margin: 0 auto; width: 20rem;">
+                  <div class="card-header" style="text-align: center;"> {{building.name}} </div>
+                  <img src={{ building.image }}>
+                  <div class="card-body">
+                    <p class="card-title">Stats:</p>
+                    <div>
+                        <p class="text-muted"> lvl : {{building.level}} |  hp : {{building.hp}} </p>
+                        <p class="text-muted">gold production : {{building.goldPerHour}} | damage : {{building.damage}}</p>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    {% for buildingOwned in buildingsOwned %}
+                        {% if buildingOwned.type.id == building.id %}
+                            {% set isBuy = isBuy + 1 %}
+                            {% set myBuilding = buildingOwned %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if isBuy %}
+                      <p class="card-text">Owned: {{isBuy}}</br>Price: {{ building.price }}$</p>
+                    {% endif %}
+                    {% if myBuilding.upgrading is defined and myBuilding.upgrading %}
+                    {% else %}
+                      <div style="display: flex; justify-content: space-between;">
+                        <form action="{{ path('build_buy') }}" method="post">
+                            <input name="buy" value="{{ building.id }}" style="display: none;">
+                            <button type="submit" class="btn btn-sm btn-success">Buy</button>
+                        </form>
+                        {% if isBuy %}
+                            <form action="{{ path('build_buy') }}" method="post">
+                                <input name="upgrade" value="{{ building.id }}" style="display: none;">
+                                <button type="submit" class="btn btn-sm btn-success">Upgrade</button>
+                            </form>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="card-body">
+                    {{ building.upgradeTime }} Secondes
+                    <div class="progress">
+                        <div
+                            id="progress_bar_{{ building.id }}"
+                            class="progress-bar progress-bar-striped progress-bar-animated"
+                            role="progressbar"
+                            aria-valuenow="75"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="width:0%;" ></div>
+                        {% if isBuy and myBuilding.upgrading %}
+                            <script type="text/javascript">
+                                name = {{ myBuilding.type.id | json_encode() | raw }};
+                                diffUpgrade = {{ date(myBuilding.startupgrade).diff(date(myBuilding.endupgrade)) | json_encode() | raw }};
+                                myDiffUpgrade = {{ date(myBuilding.startupgrade).diff(date('now')) | json_encode() | raw }};
+                                addWidthProgressBar(name, diffUpgrade, myDiffUpgrade);
+                            </script>
+                        {% endif %}
+                    </div>
+                  </div>
+                </div>
             {% endfor %}
+          </div>
         </div>
     {% endfor %}
 {% endblock %}

@@ -91,8 +91,13 @@ class BuildBuyController extends AbstractController
                 array_push($goldBuilding, $build);
             }
         }
-
+        $category = array(
+            'gold',
+            'unite',
+            'damage'
+        );
         return $this->render('build_buy/index.html.twig', [
+            'category' => $category,
             'allBuilding' => [$goldBuilding, $uniteBuilding, $damageBuilding],
             'buildingsOwned' => $this->getUser()->getBatimentsOwned()
         ]);
