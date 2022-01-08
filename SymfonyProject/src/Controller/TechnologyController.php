@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\TechnologiesOwned;
 
 class TechnologyController extends AbstractController
 {
@@ -22,10 +21,12 @@ class TechnologyController extends AbstractController
 
             if ($this->getUser()->getUserTechnoOwned()[$i]->getEndupgrade() < $dateNow) {
                 $this->getUser()->getUserTechnoOwned()[$i]->setUpgrading(False)
-                                                        ->setEndupgrade(new \DateTime('now'))
-                                                        ->setStartupgrade(new \DateTime('now'));
+                                                        ->setEndupgrade(new \DateTime('2000-01-01'))
+                                                        ->setStartupgrade(new \DateTime('2000-01-01'))
+                                                        ->setLevel($this->getUser()->getUserTechnoOwned()[$i]->getLevel() + 1);
 
                 $em->persist($this->getUser()->getUserTechnoOwned()[$i]);
+                $em->flush();
             }
         }
 
@@ -40,11 +41,11 @@ class TechnologyController extends AbstractController
                                                             ->setStartupgrade(new \DateTime('now'))
                                                             ->setUpgrading(True);
                     $em->persist($this->getUser()->getUserTechnoOwned()[$i]);
+                    $em->flush();
                 }
             }
         }
 
-        $em->flush();
 
         return $this->render('technology/index.html.twig', [
             'technoOwned' => $this->getUser()->getUserTechnoOwned()

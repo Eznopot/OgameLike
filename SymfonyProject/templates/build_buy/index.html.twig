@@ -6,6 +6,27 @@
 {% block recycler_subName %} Buy some Building {% endblock %}
 {% block recycler_explenation %} here you can buy building and get more resources {% endblock %}
 
+{% block javascripts %}
+    <script type="text/javascript">
+        function addWidthProgressBar(name, diffUpgrade, myDiffUpgrade) {
+            let diffUpgradeStamp = (diffUpgrade.s * 100 / 60) + (diffUpgrade.i * 100 / 60) * 100 + (diffUpgrade.h * 100 / 60) * 10000;
+            let myDiffUpgradeStamp = (myDiffUpgrade.s * 100 / 60) + (myDiffUpgrade.i * 100 / 60) * 100 + (myDiffUpgrade.h * 100 / 60) * 10000;
+            let progressBar = document.getElementById('progress_bar_' + name);
+            let width = 0;
+
+            setInterval(() => {
+                width = myDiffUpgradeStamp * 100 / diffUpgradeStamp;
+                progressBar.style = 'width: ' + width + '%;'
+
+                if (width > 99) {
+//                    location.reload();
+                }
+
+                myDiffUpgradeStamp++;
+            }, 1000);
+        }
+    </script>
+{% endblock %}
 
 {% block body %}
     {% for buildings in allBuilding %}
@@ -13,44 +34,79 @@
             <h1> categorie name </h1>
             {% for building in buildings %}
 
-            <table class="table table-hover">
-                <tr class="table-dark">
-                    <th scope="row">{{building.name}}</th>
-                    <th>
-                        <img style="width: 100px;" src={{ building.image }}>
-                    </th>
-                    <td>
-                        <div style="content: ""; display: table; clear: left;">
-                            <div style="float: left; width: 50%;">
-                                <p class="text-muted">statistiques</p>
-                            </div>
-                            <div style="float: left; width: 50%;">
-                                <p class="text-muted">hp : {{building.hp}} |  lvl : {{building.level}}</p>
-                                <p class="text-muted">gold production : {{building.goldPerHour}} | damage : {{building.damage}}</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div>
-                            <form action="{{ path('build_buy') }}" method="post">
-                                <input name="buy" value="{{ building.id }}" style="display: none;">
-                                <button type="submit" class="btn btn-sm btn-success">Buy</button>
-                            </form>
-                                <br>
-                            <form action="{{ path('build_buy') }}" method="post">
-                                <input name="upgrade" value="{{ building.id }}" style="display: none;">
-                                <button type="submit" class="btn btn-sm btn-success">Upgrade</button>
-                            </form>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="progress" style="width: 100px">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:20%;"></div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+                {% set myBuilding = null %}
+                {% set isBuy = 0 %}
 
+                <table class="table table-hover">
+                    <tr class="table-dark">
+                        <th scope="row">{{building.name}}</th>
+                        <th>
+                            <img style="width: 100px;" src={{ building.image }}>
+                        </th>
+                        <td>
+                            <div style="content: ""; display: table; clear: left;">
+                                <div style="float: left; width: 50%;">
+                                    <p class="text-muted">statistiques</p>
+                                </div>
+                                <div style="float: left; width: 50%;">
+                                    <p class="text-muted">hp : {{building.hp}} |  lvl : {{building.level}}</p>
+                                    <p class="text-muted">gold production : {{building.goldPerHour}} | damage : {{building.damage}}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+
+                                {% for buildingOwned in buildingsOwned %}
+                                    {% if buildingOwned.type.id == building.id %}
+                                        {% set isBuy = isBuy + 1 %}
+                                        {% set myBuilding = buildingOwned %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if myBuilding.upgrading is defined and myBuilding.upgrading %}
+                                {% else %}
+                                    <form action="{{ path('build_buy') }}" method="post">
+                                        <input name="buy" value="{{ building.id }}" style="display: none;">
+                                        <button type="submit" class="btn btn-sm btn-success">Buy</button>
+                                        {% if isBuy %}
+                                            <p class="card-text">{{isBuy}}</p>
+                                        {% endif %}
+                                    </form>
+                                    <br>
+                                    {% if isBuy %}
+                                        <form action="{{ path('build_buy') }}" method="post">
+                                            <input name="upgrade" value="{{ building.id }}" style="display: none;">
+                                            <button type="submit" class="btn btn-sm btn-success">Upgrade</button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <p class="card-text">{{ building.price }}$</p>
+                            <div class="progress" style="width: 100px">
+                                <div
+                                    id="progress_bar_{{ building.id }}"
+                                    class="progress-bar progress-bar-striped progress-bar-animated"
+                                    role="progressbar"
+                                    aria-valuenow="75"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    style="width:0%;">
+                                </div>
+                                {% if isBuy and myBuilding.upgrading %}
+                                    <script type="text/javascript">
+                                        name = {{ myBuilding.type.id | json_encode() | raw }};
+                                        diffUpgrade = {{ date(myBuilding.startupgrade).diff(date(myBuilding.endupgrade)) | json_encode() | raw }};
+                                        myDiffUpgrade = {{ date(myBuilding.startupgrade).diff(date('now')) | json_encode() | raw }};
+                                        addWidthProgressBar(name, diffUpgrade, myDiffUpgrade);
+                                    </script>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             {% endfor %}
         </div>
     {% endfor %}

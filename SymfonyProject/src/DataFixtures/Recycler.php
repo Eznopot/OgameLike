@@ -47,41 +47,45 @@ class Recycler extends Fixture
                 ->setUpgradeTime(30);
         $manager->persist($technoGold);
 
-        $type = ["damage", "unite", "gold"];
+        $typeBuilding = ["damage", "unite", "gold"];
+        $allBuilding = array();
         for ($i=0; $i < 10; $i++) {
             $rand = rand(0, 2);
             $build = new Batiments();
-            $build->setName("build_".$type[$rand].$i)
+            $build->setName("build_".$typeBuilding[$rand].$i)
                 ->setPrice(rand(10, 15))
                 ->setLvlMax(10)
                 ->setImage("https://thumbs.dreamstime.com/b/buildings-line-icon-city-architecture-sign-skyscraper-building-vector-buildings-line-icon-city-architecture-sign-skyscraper-148085776.jpg")
-                ->setDamage($type[$rand] == "damage" ? rand(100, 200) : 0)
+                ->setDamage($typeBuilding[$rand] == "damage" ? rand(100, 200) : 0)
                 ->setLevel(0)
                 ->setHp(rand(500, 900))
-                ->setDamagePerLvl($type[$rand] == "damage" ? rand(20, 50) : 0)
-                ->setGoldPerHour($type[$rand] == "gold" ? rand(10, 50) : 0)
+                ->setDamagePerLvl($typeBuilding[$rand] == "damage" ? rand(20, 50) : 0)
+                ->setGoldPerHour($typeBuilding[$rand] == "gold" ? rand(10, 50) : 0)
                 ->setHpPerLvl(rand(100, 300))
-                ->setGoldPerHourPerLvl($type[$rand] == "damage" ? rand(100, 200) : 0);
-            $manager->persist($build);    
+                ->setGoldPerHourPerLvl($typeBuilding[$rand] == "damage" ? rand(100, 200) : 0)
+                ->setUnitesPerHourPerLvl($typeBuilding[$rand] == "unite" ? rand(60, 200) : 0)
+                ->setUnitesPerHour($typeBuilding[$rand] == "unite" ? rand(60, 200) : 0)
+                ->setUpgradeTime(rand(25, 500));
+            array_push($allBuilding, $build);
+            $manager->persist($build);
         }
 
-
-
         for ($i=0; $i < 4; $i++) {
-            $technologiesOwnedAttack = new technologiesOwned();
-            $technologiesOwnedGold = new technologiesOwned();
 
+
+            $technologiesOwnedAttack = new technologiesOwned();
             $technologiesOwnedAttack->setType($technoAttack)
                                     ->setLevel(0)
-                                    ->setStartupgrade(new \DateTime('now'))
-                                    ->setEndupgrade(new \DateTime('now'))
+                                    ->setStartupgrade(new \DateTime('2000-01-01'))
+                                    ->setEndupgrade(new \DateTime('2000-01-01'))
                                     ->setUpgrading(false);
             $manager->persist($technologiesOwnedAttack);
 
+            $technologiesOwnedGold = new technologiesOwned();
             $technologiesOwnedGold->setType($technoGold)
                                 ->setLevel(0)
-                                ->setStartupgrade(new \DateTime('now'))
-                                ->setEndupgrade(new \DateTime('now'))
+                                ->setStartupgrade(new \DateTime('2000-01-01'))
+                                ->setEndupgrade(new \DateTime('2000-01-01'))
                                 ->setUpgrading(false);
             $manager->persist($technologiesOwnedGold);
 
@@ -95,6 +99,18 @@ class Recycler extends Fixture
                 ->setImage("https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg")
                 ->addUserTechnoOwned($technologiesOwnedAttack)
                 ->addUserTechnoOwned($technologiesOwnedGold);
+
+            for ($j=0; $j < rand(2, 7); $j++) {
+                $buildingOwned = new BatimentOwned();
+                $buildingOwned->setType($allBuilding[rand(0, 9)])
+                            ->setLevel(0)
+                            ->setStartupgrade(new \DateTime('2000-01-01'))
+                            ->setEndupgrade(new \DateTime('2000-01-01'))
+                            ->setUpgrading(false);
+                $manager->persist($buildingOwned);
+
+                $user->addBatimentsOwned($buildingOwned);
+            }
             $manager->persist($user);
         }
 

@@ -46,6 +46,15 @@ class Batiments
     #[ORM\Column(type: 'integer')]
     private $hpPerLvl;
 
+    #[ORM\Column(type: 'integer')]
+    private $UpgradeTime;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $unitesPerHourPerLvl;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $unitesPerHour;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -179,6 +188,42 @@ class Batiments
     public function setHpPerLvl(int $hpPerLvl): self
     {
         $this->hpPerLvl = $hpPerLvl;
+
+        return $this;
+    }
+
+    public function getUpgradeTime(): ?int
+    {
+        return $this->UpgradeTime;
+    }
+
+    public function setUpgradeTime(int $UpgradeTime): self
+    {
+        $this->UpgradeTime = $UpgradeTime;
+
+        return $this;
+    }
+
+    public function getUnitesPerHourPerLvl(): ?int
+    {
+        return $this->unitesPerHourPerLvl;
+    }
+
+    public function setUnitesPerHourPerLvl(?int $unitesPerHourPerLvl): self
+    {
+        $this->unitesPerHourPerLvl = $unitesPerHourPerLvl;
+
+        return $this;
+    }
+
+    public function getUnitesPerHour(): ?int
+    {
+        return $this->unitesPerHour;
+    }
+
+    public function setUnitesPerHour(?int $unitesPerHour): self
+    {
+        $this->unitesPerHour = $unitesPerHour;
 
         return $this;
     }
