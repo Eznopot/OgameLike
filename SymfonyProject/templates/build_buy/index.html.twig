@@ -12,6 +12,8 @@
             let diffUpgradeStamp = (diffUpgrade.s * 100 / 60) + (diffUpgrade.i * 100 / 60) * 100 + (diffUpgrade.h * 100 / 60) * 10000;
             let myDiffUpgradeStamp = (myDiffUpgrade.s * 100 / 60) + (myDiffUpgrade.i * 100 / 60) * 100 + (myDiffUpgrade.h * 100 / 60) * 10000;
             let progressBar = document.getElementById('progress_bar_' + name);
+
+            console.log(diffUpgradeStamp, myDiffUpgradeStamp);
             let width = 0;
 
             setInterval(() => {
@@ -19,7 +21,7 @@
                 progressBar.style = 'width: ' + width + '%;'
 
                 if (width > 99) {
-//                    location.reload();
+                    location.reload();
                 }
 
                 myDiffUpgradeStamp++;
@@ -84,7 +86,10 @@
                             </div>
                         </td>
                         <td>
-                            <p class="card-text">{{ building.price }}$</p>
+                            <div>
+                                <p class="card-text">{{ building.price }}$</p>
+                                <p class="card-text">{{ building.upgradeTime }} Secondes</p>
+                            </div>
                             <div class="progress" style="width: 100px">
                                 <div
                                     id="progress_bar_{{ building.id }}"

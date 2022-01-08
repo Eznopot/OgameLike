@@ -21,12 +21,17 @@ class BuildBuyController extends AbstractController
 
         for ($i=0; $i < count($this->getUser()->getBatimentsOwned()); $i++) {
             $dateNow = new \DateTime('now');
+            $dateBase = new \DateTime('2000-01-01');
+            $endUpgrade = $this->getUser()->getBatimentsOwned()[$i]->getEndupgrade();
 
-            if ($this->getUser()->getBatimentsOwned()[$i]->getEndupgrade() < $dateNow) {
+            if ($endUpgrade->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s') &&
+                $endUpgrade->format('Y-m-d h:i:s') != $dateBase->format('Y-m-d h:i:s')) {
+
                 $this->getUser()->getBatimentsOwned()[$i]->setUpgrading(False)
-                                                        ->setEndupgrade(new \DateTime('2000-01-01'))
-                                                        ->setStartupgrade(new \DateTime('2000-01-01'))
-                                                        ->setLevel($this->getUser()->getBatimentsOwned()[$i]->getLevel() + 1);
+                    ->setEndupgrade($dateBase)
+                    ->setStartupgrade($dateBase)
+                    ->setLevel($this->getUser()->getBatimentsOwned()[$i]->getLevel() + 1);
+
                 $em->persist($this->getUser()->getBatimentsOwned()[$i]);
                 $em->flush();
             }
@@ -41,8 +46,8 @@ class BuildBuyController extends AbstractController
             $newBuild = new BatimentOwned($buildBuy);
             $newBuild->setType($buildBuy)
                     ->setLevel(0)
-                    ->setStartupgrade($endUpgrade)
-                    ->setEndupgrade(new \DateTime('now'))
+                    ->setStartupgrade(new \DateTime('now'))
+                    ->setEndupgrade($endUpgrade)
                     ->setUpgrading(True);
             $em->persist($newBuild);
 
@@ -52,7 +57,19 @@ class BuildBuyController extends AbstractController
         }
 
         if ($upgradeId !== null) {
-            dump($upgradeId);
+            for ($i=0; $i < count($this->getUser()->getBatimentsOwned()); $i++) {
+                if ($this->getUser()->getBatimentsOwned()[$i]->getType()->getId() == $upgradeId) {
+                    $upgradeTime = $this->getUser()->getBatimentsOwned()[$i]->getType()->getUpgradeTime();
+                    $endUpgrade = new \DateTime('now');
+                    $endUpgrade->add(new \DateInterval('PT'.$upgradeTime.'S'));
+
+                    $this->getUser()->getBatimentsOwned()[$i]->setEndupgrade($endUpgrade)
+                        ->setStartupgrade(new \DateTime('now'))
+                        ->setUpgrading(True);
+                    $em->persist($this->getUser()->getBatimentsOwned()[$i]);
+                    $em->flush();
+                }
+            }
         }
 
         $building = $this->getDoctrine()->getRepository(Batiments::class)->findAll();

@@ -66,7 +66,7 @@ class Recycler extends Fixture
                 ->setGoldPerHourPerLvl($typeBuilding[$rand] == "damage" ? rand(100, 200) : 0)
                 ->setUnitesPerHourPerLvl($typeBuilding[$rand] == "unite" ? rand(60, 200) : 0)
                 ->setUnitesPerHour($typeBuilding[$rand] == "unite" ? rand(60, 200) : 0)
-                ->setUpgradeTime(rand(25, 500));
+                ->setUpgradeTime(rand(10, 100));
             array_push($allBuilding, $build);
             $manager->persist($build);
         }

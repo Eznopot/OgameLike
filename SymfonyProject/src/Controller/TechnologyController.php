@@ -21,9 +21,6 @@ class TechnologyController extends AbstractController
             $dateBase = new \DateTime('2000-01-01');
             $endUpgrade = $this->getUser()->getUserTechnoOwned()[$i]->getEndupgrade();
 
-            dump($endUpgrade);
-            dump($dateNow);
-
             if ($endUpgrade->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s') &&
                 $endUpgrade->format('Y-m-d h:i:s') != $dateBase->format('Y-m-d h:i:s')) {
                 $this->getUser()->getUserTechnoOwned()[$i]->setUpgrading(False)
