@@ -32,7 +32,7 @@ class Recycler extends Fixture
                 ->setGoldBoost(0)
                 ->setDamagePerLevel(5)
                 ->setGoldBoostPerLevel(0)
-                ->setUpgradeTime(120);
+                ->setUpgradeTime(20);
         $manager->persist($technoAttack);
 
         $technoGold = new Technologies();
@@ -44,7 +44,7 @@ class Recycler extends Fixture
                 ->setGoldBoost(0)
                 ->setDamagePerLevel(0)
                 ->setGoldBoostPerLevel(10)
-                ->setUpgradeTime(30);
+                ->setUpgradeTime(10);
         $manager->persist($technoGold);
 
         $typeBuilding = ["damage", "unite", "gold"];

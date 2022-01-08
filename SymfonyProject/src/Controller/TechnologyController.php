@@ -18,12 +18,18 @@ class TechnologyController extends AbstractController
 
         for ($i=0; $i < count($this->getUser()->getUserTechnoOwned()); $i++) {
             $dateNow = new \DateTime('now');
+            $dateBase = new \DateTime('2000-01-01');
+            $endUpgrade = $this->getUser()->getUserTechnoOwned()[$i]->getEndupgrade();
 
-            if ($this->getUser()->getUserTechnoOwned()[$i]->getEndupgrade() < $dateNow) {
+            dump($endUpgrade);
+            dump($dateNow);
+
+            if ($endUpgrade->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s') &&
+                $endUpgrade->format('Y-m-d h:i:s') != $dateBase->format('Y-m-d h:i:s')) {
                 $this->getUser()->getUserTechnoOwned()[$i]->setUpgrading(False)
-                                                        ->setEndupgrade(new \DateTime('2000-01-01'))
-                                                        ->setStartupgrade(new \DateTime('2000-01-01'))
-                                                        ->setLevel($this->getUser()->getUserTechnoOwned()[$i]->getLevel() + 1);
+                    ->setEndupgrade($dateBase)
+                    ->setStartupgrade($dateBase)
+                    ->setLevel($this->getUser()->getUserTechnoOwned()[$i]->getLevel() + 1);
 
                 $em->persist($this->getUser()->getUserTechnoOwned()[$i]);
                 $em->flush();
@@ -38,8 +44,8 @@ class TechnologyController extends AbstractController
                     $endUpgrade->add(new \DateInterval('PT'.$upgradeTime.'S'));
 
                     $this->getUser()->getUserTechnoOwned()[$i]->setEndupgrade($endUpgrade)
-                                                            ->setStartupgrade(new \DateTime('now'))
-                                                            ->setUpgrading(True);
+                        ->setStartupgrade(new \DateTime('now'))
+                        ->setUpgrading(True);
                     $em->persist($this->getUser()->getUserTechnoOwned()[$i]);
                     $em->flush();
                 }
