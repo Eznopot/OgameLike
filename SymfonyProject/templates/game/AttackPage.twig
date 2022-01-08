@@ -25,20 +25,30 @@
         </p>
     </div>
     </div>
+    {% for planet in planetList %}
     <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
         <div class="card-body">
             <p class="planet-listing card-text">
-                {% for planet in planetList %}
+
                     <div class="planet">
                         <span class="dot"></span>
-                        Name: {{ planet.name }}
-                        Defense level: {{ planet.defenseLvl }}
-                        Distance: {{ planet.distance }}
-                        Is under attack: {{ planet.isUnderAtk() }}
+                        Name: {{ planet.name }}<br>
+                        Defense level: {{ planet.defenseLvl }}<br>
+                        Distance: {{ planet.distance }}<br>
+                        Is under attack:
+                        {% if planet.isUnderAtk() == true %}
+                            Yes<br>
+                        {% else %}
+                            No<br>
+                            <input type="range" id="unit-slider" name="Units" value="1" min="1" max="{{ unitAmount }}" oninput="this.nextElementSibling.value = this.value">
+                            <output>1</output><br>
+                            <button class="btn btn-success">Attack!</button>
+                        {% endif %}
                     </div>
-                {% endfor %}
+
             </p>
         </div>
     </div>
+    {% endfor %}
     </div>
 {% endblock %}
