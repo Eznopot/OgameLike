@@ -114,11 +114,13 @@ class Recycler extends Fixture
             }
             $manager->persist($user);
         }
+
         $planet = new Planets();
         $planet->setName("Neptune")
             ->setDefenseLvl(2)
             ->setDistance(1200);
         $manager->persist($planet);
+
         $planet2 = new Planets();
         $planet2->setName("Pluto")
             ->setDefenseLvl(1)

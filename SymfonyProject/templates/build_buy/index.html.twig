@@ -39,12 +39,14 @@
             {% for building in buildings %}
                 {% set myBuilding = null %}
                 {% set isBuy = 0 %}
+
                 {% for buildingOwned in buildingsOwned %}
                     {% if buildingOwned.type.id == building.id %}
                         {% set isBuy = isBuy + 1 %}
                         {% set myBuilding = buildingOwned %}
                     {% endif %}
                 {% endfor %}
+
                 <div class="card mb-3" style="margin: 0 auto; width: 20rem;">
                   <div class="card-header" style="text-align: center;"> {{building.name}} </div>
                   <img src={{ building.image }}>
