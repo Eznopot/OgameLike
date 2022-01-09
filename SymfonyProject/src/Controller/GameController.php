@@ -52,13 +52,12 @@ class GameController extends AbstractController
 
         for ($i=0; $i < count($planetArray); $i++)
         {
-            if($planetArray[$i] == $request->request->get('planetID')) {
+            if($planetArray[$i]->getId() == $request->request->get('planetID')) {
                $planet = $planetArray[$i];
                break;
             }
         }
-
-        if ($unitNbr !== null and $planet !== null) {
+        if ($unitNbr != 0 and $planet !== null) {
             $atk = new OngoingAtk();
             $atk->setDifficuly((5 - $planet->getDefenseLvl()) * 20 + ($unitNbr*2))
                 ->setStart(time())
@@ -67,17 +66,19 @@ class GameController extends AbstractController
                 ->setPlanetID($planet);
             $em->persist($atk);
             $this->getUser()->setUnits($this->getUser()->getUnits() - $unitNbr);
+
             $em->persist($this->getUser());
+
             $planet->setOngoingAtk($atk);
-            $em->persist();
+            $em->persist($planet);
             $em->flush();
         }
 
         return $this->render('game/AttackPage.twig', array(
+            "user" => $this->getUser(),
             "unitAmount" => $this->getUser()->getUnits(),
             "planetList" => $planetArray,
-            "atkList" => $ongoingAtk,
-            "user" => $this->getUser()
+            "atkList" => $ongoingAtk
         ));
     }
 }

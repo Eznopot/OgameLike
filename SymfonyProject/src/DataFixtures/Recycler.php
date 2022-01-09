@@ -67,21 +67,12 @@ class Recycler extends Fixture
                 ->setUnitesPerHourPerLvl($typeBuilding[$rand] == "unite" ? rand(60, 200) : 0)
                 ->setUnitesPerHour($typeBuilding[$rand] == "unite" ? rand(60, 200) : 0)
                 ->setUpgradeTime(rand(10, 100));
-            array_push($allBuilding, $build);
+            $allBuilding[] = $build;
             $manager->persist($build);
         }
 
-        $planet = new Planets();
-        $planet->setName("Neptune")
-            ->setDefenseLvl(2)
-            ->setDistance(1200);
-        $planet2 = new Planets();
-        $planet2->setName("Pluto")
-            ->setDefenseLvl(1)
-            ->setDistance(500);
-        for ($i=0; $i < 4; $i++) {
-
-
+        $allUser = array();
+        for ($i=0; $i < 10; $i++) {
             $technologiesOwnedAttack = new technologiesOwned();
             $technologiesOwnedAttack->setType($technoAttack)
                                     ->setLevel(0)
@@ -104,7 +95,7 @@ class Recycler extends Fixture
                 ->setPassword($hash)
                 ->setGold(rand(20, 100))
                 ->setElo(0)
-                ->setUnits($i)
+                ->setUnits(rand(10, 100))
                 ->setImage("https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg")
                 ->addUserTechnoOwned($technologiesOwnedAttack)
                 ->addUserTechnoOwned($technologiesOwnedGold)
@@ -121,15 +112,32 @@ class Recycler extends Fixture
 
                 $user->addBatimentsOwned($buildingOwned);
             }
+            $allUser[] =$user;
             $manager->persist($user);
-            if($i < 2) {
-                $planet->addPlayer($user);
-            } else {
-                $planet2->addPlayer($user);
-            }
         }
-        $manager->persist($planet);
-        $manager->persist($planet2);
+
+        $allPlanet = array();
+        $planetId = ['Mercure', 'Venus', 'Terre', 'Mars', 'Jupiter', 'Saturne', 'Uranus', 'Neptune'];
+        for ($i=0; $i < count($planetId); $i++) {
+            $planet = new Planets();
+            $planet->setName($planetId[$i])
+                ->setDefenseLvl(rand(1, 5))
+                ->setDistance(($i + 1) * rand(1000, 2000));
+            $allPlanet[] = $planet;
+        }
+
+        $countUser = 0;
+        $countPlanet = 0;
+        $loopNumber = (count($allUser) > count($allPlanet)) ? count($allUser) : count($allPlanet);
+        for ($i=0; $i < $loopNumber; $i++) {
+            $allPlanet[$countPlanet]->addPlayer($allUser[$countUser]);
+            $countUser = ($countUser + 1 == count($allUser)) ? 0 : $countUser + 1;
+            $countPlanet = ($countPlanet + 1 == count($allPlanet)) ? 0 : $countPlanet + 1;
+        }
+
+        for ($i=0; $i < count($allPlanet); $i++) {
+            $manager->persist($allPlanet[$i]);
+        }
         $manager->flush();
     }
 }

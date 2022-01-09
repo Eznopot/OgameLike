@@ -11,24 +11,32 @@
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
+        {% endblock %}
 
+        {% block javascripts_page %}
             <script type="text/javascript">
                 if (window.history.replaceState) {
                     window.history.replaceState( null, null, window.location.href );
                 }
                 function addGoldUnit(prodGoldPerSecond, prodUnitePerSecond) {
-                    console.log("here2");
+                    let userGold;
+                    let userUnites;
 
-                    let userGold = document.getElementById('user_gold').innerHTML;
-                    let userUnites = document.getElementById('user_unites').innerHTML;
                     let addGold = 0;
                     let addUnites = 0;
 
                     setInterval(() => {
+                        userGold = document.querySelectorAll('[id=user_gold]');
+                        userUnites = document.querySelectorAll('[id=user_unites]');
+
                         addGold += prodGoldPerSecond;
                         addUnites += prodUnitePerSecond;
-                        document.getElementById('user_gold').innerHTML = parseInt(userGold) + parseInt(addGold) + ' Gold';
-                        document.getElementById('user_unites').innerHTML = parseInt(userUnites) + parseInt(addUnites) + ' Unites';
+                        for (let i = 0; i < userGold.length; i++) {
+                            userGold[i].innerHTML = parseInt(userGold[i].innerHTML) + parseInt(addGold);
+                        }
+                        for (let i = 0; i < userUnites.length; i++) {
+                            userUnites[i].innerHTML = parseInt(userUnites[i].innerHTML) + parseInt(addUnites);
+                        }
                     }, 1000);
                 }
 
@@ -50,7 +58,6 @@
                     }, 1000);
                 }
             </script>
-
         {% endblock %}
     </head>
 
@@ -85,16 +92,24 @@
                         </li>
                     </ul>
                     <div class="d-flex">
-                        <p id="user_gold" class="text-warning" style="margin-right: 16px;">{{ user.gold }} Gold</p>
-                        <p id="user_unites" class="text-warning" style="margin-right: 16px;">{{ user.units }} Unites</p>
+                        <p id="user_gold" class="test text-warning" style="margin-right: 4px;">
+                            {{ user.gold }}
+                            <p class="text-warning" style="margin-right: 16px;">Gold</p>
+                        </p>
+                        <p id="user_unites" class="test text-warning" style="margin-right: 4px;">
+                            {{ user.units }}
+                            <p class="text-warning" style="margin-right: 16px;">Unites</p>
+                        </p>
                         {% set prodGoldPerSecond = 0 %}
                         {% set prodUnitePerSecond = 0 %}
 
                         {% for buildOwned in user.batimentsOwned %}
-                            {% set prodGoldPerSecond = prodGoldPerSecond + buildOwned.type.goldPerHour / 3600 %}
-                            {% set prodUnitePerSecond = prodUnitePerSecond + buildOwned.type.unitesPerHour / 3600 %}
+                            {% if not buildOwned.upgrading %}
+                                {% set prodGoldPerSecond = prodGoldPerSecond + buildOwned.type.goldPerHour / 3600 %}
+                                {% set prodUnitePerSecond = prodUnitePerSecond + buildOwned.type.unitesPerHour / 3600 %}
+                            {% endif %}
                         {% endfor %}
-                        <p class="text-warning">{{ prodGoldPerSecond }} Gold/sec</p>
+                        <p class="text-warning">{{ prodGoldPerSecond | number_format(3, '.', ',') }} Gold/sec</p>
                         <script type="text/javascript">
                             addGoldUnit(
                                 {{ prodGoldPerSecond | json_encode() | raw }},

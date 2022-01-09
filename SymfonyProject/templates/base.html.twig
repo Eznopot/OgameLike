@@ -11,6 +11,10 @@
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts_page %}
+            {{ encore_entry_script_tags('app') }}
 
             <script type="text/javascript">
                 function addGoldUnit(prodGoldPerSecond, prodUnitePerSecond) {
@@ -68,10 +72,12 @@
                         {% set prodUnitePerSecond = 0 %}
 
                         {% for buildOwned in user.batimentsOwned %}
-                            {% set prodGoldPerSecond = prodGoldPerSecond + buildOwned.type.goldPerHour / 3600 %}
-                            {% set prodUnitePerSecond = prodUnitePerSecond + buildOwned.type.unitesPerHour / 3600 %}
+                            {% if not buildOwned.upgrading %}
+                                {% set prodGoldPerSecond = prodGoldPerSecond + buildOwned.type.goldPerHour / 3600 %}
+                                {% set prodUnitePerSecond = prodUnitePerSecond + buildOwned.type.unitesPerHour / 3600 %}
+                            {% endif %}
                         {% endfor %}
-                        <p class="text-warning">{{ prodGoldPerSecond }} Gold/sec</p>
+                        <p class="text-warning">{{ prodGoldPerSecond | number_format(3, '.', ',')}} Gold/sec</p>
                         <script type="text/javascript">
                             addGoldUnit(
                                 {{ prodGoldPerSecond | json_encode() | raw }},

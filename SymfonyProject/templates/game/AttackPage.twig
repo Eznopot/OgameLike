@@ -13,13 +13,14 @@
             window.history.replaceState( null, null, window.location.href );
         }
 
-        function getRandomColor() {
+        function getRandomColor(id) {
+
             let letters = '0123456789ABCDEF';
             let randomColor = '#' ;
             for (let i = 0; i < 6; i++) {
                 randomColor += letters[Math.floor(Math.random() * 16)];
             }
-            return randomColor;
+            document.getElementById(id).style['background-color'] = randomColor;
         }
     </script>
 {% endblock %}
@@ -27,7 +28,6 @@
 {% block body %}
     <style>
         .dot {
-            background-color: forestgreen;
             height: 25px;
             width: 25px;
             border-radius: 50%;
@@ -38,37 +38,64 @@
     <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
         <div class="card-body">
         <p class="unit-count card-text">
-            Units available: {{ unitAmount }}
+            Units available: <p id="user_unites">{{ user.units }}</p>
         </p>
     </div>
     </div>
     {% for planet in planetList %}
-    <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
-        <div class="card-body">
-            <p class="planet-listing card-text">
-
-                    <div class="planet">
-                        <span class="dot"></span>
-                        Name: {{ planet.getName() }}<br>
-                        Defense level: {{ planet.getDefenseLvl() }}<br>
-                        Distance: {{ planet.getDistance() }}<br>
-                        Is under attack:
-                        {% if planet.isUnderAtk() == true %}
-                            Yes<br>
+        <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+            <div class="card-body">
+                <div class="planet">
+                    <span id="color_planet_{{planet.id}}" class="dot"></span>
+                    <script type="text/javascript">
+                        getRandomColor("color_planet_" + {{planet.id | json_encode() | raw }});
+                    </script>
+                    <p class="card-text">Name: {{ planet.getName() }}</p>
+                    <p class="card-text">Defense level: {{ planet.getDefenseLvl() }}</p>
+                    <p class="card-text">Distance: {{ planet.getDistance() }}</p>
+                    {% if planet.id != user.planet.id %}
+                        {% if planet.isUnderAtk() %}
+                            <p class="card-text">Is under attack: Yes</p>
+                            <div class="progress">
+                                <div
+                                    id="progress_bar_{{ planet.id }}"
+                                    class="progress-bar progress-bar-striped progress-bar-animated"
+                                    role="progressbar"
+                                    aria-valuenow="75"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    style="width:0%;" ></div>
+                                <script type="text/javascript">
+                                    addWidthProgressBar(
+                                        {{ planet.id | json_encode() | raw }},
+                                        {{ date().diff(date(myBuilding.endupgrade)) | json_encode() | raw }},
+                                        {{ date().diff(date('now')) | json_encode() | raw }}
+                                    );
+                                </script>
+                            </div>
                         {% else %}
-                            No<br>
+                            <p class="card-text">Is under attack: No</p>
                             <form action="{{ path('attack_page') }}" method="post">
-                                <input type="range" id="unit-slider" name="Units" value="1" min="1" max="{{ unitAmount }}" oninput="this.nextElementSibling.value = this.value">
-                                <output>1</output><br>
-                                <input type="hidden" id="planetID" name="planetID" value="{{ planet.getId }}">
-                                <button class="btn btn-success" id="lunch-atk-btn">Attack!</button>
+                                <input
+                                    type="range"
+                                    name="Units"
+                                    class="form-range" 
+                                    id="unit-slider"
+                                    value="0" min="0" max="{{ unitAmount }}" 
+                                    oninput="this.nextElementSibling.value = this.value"
+                                >
+                                <output>0</output>
+                                <input type="hidden" id="planetID" name="planetID" value="{{ planet.id }}">
+                                <br>
+                                <button type="submit" class="btn btn-success" id="lunch-atk-btn">Attack!</button>
                             </form>
                         {% endif %}
-                    </div>
-
-            </p>
+                    {% else %}
+                        <p class="mt-3 card-text">Don't attack your planet. It would be disastrous</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    </div>
     {% endfor %}
     </div>
 {% endblock %}
