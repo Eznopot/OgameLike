@@ -22,6 +22,7 @@ class LadderController extends AbstractController
         });
         
         return $this->render('ladder/index.html.twig', [
+            'user' => $this->getUser(),
             'players' => $players
         ]);
     }

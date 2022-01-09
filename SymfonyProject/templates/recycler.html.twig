@@ -57,7 +57,7 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">OgameLike</a>
+                <a class="navbar-brand" href={{ path('home') }}>OgameLike</a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -65,9 +65,10 @@
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href={{ path('home') }}>Home
-                                <span class="visually-hidden">(current)</span>
-                            </a>
+                            <a class="nav-link" href={{ path('home') }}>Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('player') }}>Profile</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href={{ path('technology') }}>Technology</a>
@@ -79,10 +80,13 @@
                         <li class="nav-item">
                             <a class="nav-link" href={{ path('build_buy') }}>Build buy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('ladder') }}>Ladder</a>
+                        </li>
                     </ul>
                     <div class="d-flex">
                         <p id="user_gold" class="text-warning" style="margin-right: 16px;">{{ user.gold }} Gold</p>
-                        <p id="user_unites" class="text-warning">{{ user.units }} Unites</p>
+                        <p id="user_unites" class="text-warning" style="margin-right: 16px;">{{ user.units }} Unites</p>
                         {% set prodGoldPerSecond = 0 %}
                         {% set prodUnitePerSecond = 0 %}
 
@@ -90,7 +94,7 @@
                             {% set prodGoldPerSecond = prodGoldPerSecond + buildOwned.type.goldPerHour / 3600 %}
                             {% set prodUnitePerSecond = prodUnitePerSecond + buildOwned.type.unitesPerHour / 3600 %}
                         {% endfor %}
-                        {{dump(prodGoldPerSecond)}}
+                        <p class="text-warning">{{ prodGoldPerSecond }} Gold/sec</p>
                         <script type="text/javascript">
                             addGoldUnit(
                                 {{ prodGoldPerSecond | json_encode() | raw }},
