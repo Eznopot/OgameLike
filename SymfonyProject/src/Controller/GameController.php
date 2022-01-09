@@ -66,8 +66,11 @@ class GameController extends AbstractController
                 ->addPlayerID($this->getUser())
                 ->setPlanetID($planet);
             $em->persist($atk);
-            $em->flush();
             $this->getUser()->setUnits($this->getUser()->getUnits() - $unitNbr);
+            $em->persist($this->getUser());
+            $planet->setOngoingAtk($atk);
+            $em->persist();
+            $em->flush();
         }
 
         return $this->render('game/AttackPage.twig', array(
