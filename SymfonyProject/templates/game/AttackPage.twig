@@ -12,6 +12,15 @@
         if (window.history.replaceState) {
             window.history.replaceState( null, null, window.location.href );
         }
+
+        function getRandomColor() {
+            let letters = '0123456789ABCDEF';
+            let randomColor = '#' ;
+            for (let i = 0; i < 6; i++) {
+                randomColor += letters[Math.floor(Math.random() * 16)];
+            }
+            return randomColor;
+        }
     </script>
 {% endblock %}
 
