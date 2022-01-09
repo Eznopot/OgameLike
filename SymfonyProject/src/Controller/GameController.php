@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\OngoingAtk;
 use App\Entity\Planets;
+use App\Entity\User;
 use App\Services\atkServices;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,8 +27,8 @@ class GameController extends AbstractController
 
 
         return $this->render('game/resourcesPage.twig', array(
-            "goldAmount" => 1000,
-            "unitAmount" => 32,
+            "goldAmount" => $this->getUser()->getGold(),
+            "unitAmount" => $this->getUser()->getUnits(),
             "goldBuilding" => 12,
             "unitBuilding" => 6,
             "defenseBuilding" => 3
@@ -66,10 +67,11 @@ class GameController extends AbstractController
                 ->setPlanetID($planet);
             $em->persist($atk);
             $em->flush();
+            $this->getUser()->setUnits($this->getUser()->getUnits() - $unitNbr);
         }
 
-        return $this->render('game/attackPage.twig', array(
-            "unitAmount" => 100,
+        return $this->render('game/AttackPage.twig', array(
+            "unitAmount" => $this->getUser()->getUnits(),
             "planetList" => $planetArray,
             "atkList" => $ongoingAtk,
             "user" => $this->getUser()
