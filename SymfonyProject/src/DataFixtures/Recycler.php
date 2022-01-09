@@ -94,12 +94,13 @@ class Recycler extends Fixture
             $hash = $this->encoder->encodePassword($user, '1234');
             $user->setUsername('name'.$i.'@m')
                 ->setPassword($hash)
-                ->setGold(0)
+                ->setGold(rand(20, 100))
                 ->setElo(0)
                 ->setUnits($i)
                 ->setImage("https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg")
                 ->addUserTechnoOwned($technologiesOwnedAttack)
-                ->addUserTechnoOwned($technologiesOwnedGold);
+                ->addUserTechnoOwned($technologiesOwnedGold)
+                ->setlastUpdate(new \DateTime('now'));
 
             for ($j=0; $j < rand(2, 7); $j++) {
                 $buildingOwned = new BatimentOwned();
