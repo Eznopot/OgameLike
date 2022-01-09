@@ -26,6 +26,7 @@ class HomeController extends AbstractController
         }
 
         return $this->render('home/index.html.twig', [
+            'user' => $this->getUser(),
             'controller_name' => 'HomeController',
             'technos_owned' => $arrayOfTechno,
             'batiments_owned' => $arrayOfBat,

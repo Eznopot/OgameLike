@@ -11,6 +11,46 @@
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
+
+            <script type="text/javascript">
+                if (window.history.replaceState) {
+                    window.history.replaceState( null, null, window.location.href );
+                }
+                function addGoldUnit(prodGoldPerSecond, prodUnitePerSecond) {
+                    console.log("here2");
+
+                    let userGold = document.getElementById('user_gold').innerHTML;
+                    let userUnites = document.getElementById('user_unites').innerHTML;
+                    let addGold = 0;
+                    let addUnites = 0;
+
+                    setInterval(() => {
+                        addGold += prodGoldPerSecond;
+                        addUnites += prodUnitePerSecond;
+                        document.getElementById('user_gold').innerHTML = parseInt(userGold) + parseInt(addGold);
+                        document.getElementById('user_unites').innerHTML = parseInt(userUnites) + parseInt(addUnites);
+                    }, 1000);
+                }
+
+                function addWidthProgressBar(name, diffUpgrade, myDiffUpgrade) {
+                    let diffUpgradeStamp = (diffUpgrade.s * 100 / 60) + (diffUpgrade.i * 100 / 60) * 100 + (diffUpgrade.h * 100 / 60) * 10000;
+                    let myDiffUpgradeStamp = (myDiffUpgrade.s * 100 / 60) + (myDiffUpgrade.i * 100 / 60) * 100 + (myDiffUpgrade.h * 100 / 60) * 10000;
+                    let progressBar = document.getElementById('progress_bar_' + name);
+                    let width = 0;
+
+                    setInterval(() => {
+                        width = myDiffUpgradeStamp * 100 / diffUpgradeStamp;
+                        progressBar.style = 'width: ' + width + '%;'
+
+                        if (width > 99) {
+                            location.reload();
+                        }
+
+                        myDiffUpgradeStamp++;
+                    }, 1000);
+                }
+            </script>
+
         {% endblock %}
     </head>
 
@@ -25,18 +65,39 @@
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">Home
+                            <a class="nav-link active" href={{ path('home') }}>Home
                                 <span class="visually-hidden">(current)</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Features</a>
+                            <a class="nav-link" href={{ path('technology') }}>Technology</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('build_production') }}>Build production</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('build_buy') }}>Build buy</a>
                         </li>
                     </ul>
-                    <form class="d-flex">
-                        <input class="form-control me-sm-2" type="text" placeholder="Search">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                    </form>
+                    <div class="d-flex">
+                        <p id="user_gold" class="text-warning" style="margin-right: 16px;">{{ user.gold }} Gold</p>
+                        <p id="user_unites" class="text-warning">{{ user.units }} Unites</p>
+                        {% set prodGoldPerSecond = 0 %}
+                        {% set prodUnitePerSecond = 0 %}
+
+                        {% for buildOwned in user.batimentsOwned %}
+                            {% set prodGoldPerSecond = prodGoldPerSecond + buildOwned.type.goldPerHour / 3600 %}
+                            {% set prodUnitePerSecond = prodUnitePerSecond + buildOwned.type.unitesPerHour / 3600 %}
+                        {% endfor %}
+                        {{dump(prodGoldPerSecond)}}
+                        <script type="text/javascript">
+                            addGoldUnit(
+                                {{ prodGoldPerSecond | json_encode() | raw }},
+                                {{ prodUnitePerSecond | json_encode() | raw }}
+                            );
+                        </script>
+                    </div>
                 </div>
             </div>
         </nav>
