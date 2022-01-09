@@ -31,6 +31,9 @@ class OngoingAtk
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'ongoingAtks')]
     private $playerID;
 
+    #[ORM\Column(type: 'integer')]
+    private $SuccessRate;
+
     public function __construct()
     {
         $this->playerID = new ArrayCollection();
@@ -41,12 +44,12 @@ class OngoingAtk
         return $this->id;
     }
 
-    public function getStart(): ?int
+    public function getStart(): ?\DateTimeInterface
     {
         return $this->start;
     }
 
-    public function setStart(int $start): self
+    public function setStart(?\DateTimeInterface $start): self
     {
         $this->start = $start;
 
@@ -65,12 +68,12 @@ class OngoingAtk
         return $this;
     }
 
-    public function getEndTime(): ?int
+    public function getEndTime(): ?\DateTimeInterface
     {
         return $this->endTime;
     }
 
-    public function setEndTime(int $endTime): self
+    public function setEndTime(?\DateTimeInterface $endTime): self
     {
         $this->endTime = $endTime;
 
@@ -109,6 +112,18 @@ class OngoingAtk
     public function removePlayerID(User $playerID): self
     {
         $this->playerID->removeElement($playerID);
+
+        return $this;
+    }
+
+    public function getSuccessRate(): ?int
+    {
+        return $this->SuccessRate;
+    }
+
+    public function setSuccessRate(int $SuccessRate): self
+    {
+        $this->SuccessRate = $SuccessRate;
 
         return $this;
     }

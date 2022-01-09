@@ -56,12 +56,24 @@ class GameController extends AbstractController
                $planet = $planetArray[$i];
                break;
             }
+            $dateNow = new \DateTime('now');
+            $dateBase = new \DateTime('2000-01-01');
+            if ($planetArray[$i]->isUnderAtk() !== false &&
+                $planetArray[$i]->getOngoingAtk()->getEndTime()->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s') &&
+                $planetArray[$i]->getOngoingAtk()->getEndTime()->format('Y-m-d h:i:s')  != $dateBase->format('Y-m-d h:i:s'))
+            {
+                $planetArray[$i]->getOngoingAtk()->getPlayerID()->setGold($planetArray[$i]->getOngoingAtk()->getPlayerID()->getGold() + ($planetArray[$i]->getDefenseLvl() * 100));
+                $em->persist($planetArray[$i]->getOngoingAtk()->getPlayerID());
+            }
         }
         if ($unitNbr != 0 and $planet !== null) {
             $atk = new OngoingAtk();
-            $atk->setDifficuly((5 - $planet->getDefenseLvl()) * 20 + ($unitNbr*2))
-                ->setStart(time())
-                ->setEndTime($planet->getDistance())
+            $endTime = new \DateTime('now');
+            $endTime->add(new \DateInterval('PT'.$planet->getDistance().'S'));
+            $atk->setDifficuly($planet->getDefenseLvl())
+                ->setSuccessRate((5 - $planet->getDefenseLvl()) * 20 + ($unitNbr*2))
+                ->setStart(new \DateTime('now'))
+                ->setEndTime($endTime)
                 ->addPlayerID($this->getUser())
                 ->setPlanetID($planet);
             $em->persist($atk);

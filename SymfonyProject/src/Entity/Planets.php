@@ -30,6 +30,9 @@ class Planets
     #[ORM\OneToMany(mappedBy: 'planet', targetEntity: User::class)]
     private $Players;
 
+    #[ORM\Column(type: 'blob', nullable: true)]
+    private $image;
+
     public function __construct()
     {
         $this->Players = new ArrayCollection();
@@ -126,6 +129,18 @@ class Planets
                 $player->setPlanet(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    public function setImage($image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

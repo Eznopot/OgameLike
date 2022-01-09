@@ -22,9 +22,4 @@ class atkServices
         $request = Request::createFromGlobals();
         return $doctrines->getRepository(Planets::class)->findAll();
     }
-
-    public function endAttack() {
-
-    }
-
 }
