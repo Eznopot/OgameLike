@@ -68,7 +68,7 @@ class GameController extends AbstractController
             $em->flush();
         }
 
-        return $this->render('game/attackPage.twig', array(
+        return $this->render('game/AttackPage.twig', array(
             "unitAmount" => 100,
             "planetList" => $planetArray,
             "atkList" => $ongoingAtk,

@@ -53,10 +53,11 @@
                 ></div>
                 {% if techno.upgrading %}
                     <script type="text/javascript">
-                        name = {{ techno.type.id | json_encode() | raw }};
-                        diffUpgrade = {{ date(techno.startupgrade).diff(date(techno.endupgrade)) | json_encode() | raw }};
-                        myDiffUpgrade = {{ date(techno.startupgrade).diff(date('now')) | json_encode() | raw }};
-                        addWidthProgressBar(name, diffUpgrade, myDiffUpgrade);
+                        addWidthProgressBar(
+                            {{ techno.type.id | json_encode() | raw }},
+                            {{ date(techno.startupgrade).diff(date(techno.endupgrade)) | json_encode() | raw }},
+                            {{ date(techno.startupgrade).diff(date('now')) | json_encode() | raw }}
+                        );
                     </script>
                 {% endif %}
             </div>

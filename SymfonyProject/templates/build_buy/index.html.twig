@@ -55,22 +55,22 @@
                     <p class="card-title">Stats:</p>
                     <div>
                         {% if myBuilding %}
-                          <p class="text-muted"> lvl : {{myBuilding.level}} |  hp : {{building.hp}}</p>
+                            <p class="text-muted"> lvl : {{myBuilding.level}} |  hp : {{building.hp}}</p>
                         {% endif %}
                         {% if category[categoryIndex] == "gold"%}
-                          <p class="text-muted">gold production : {{building.goldPerHour}}</p>
+                            <p class="text-muted">gold production : {{building.goldPerHour}}</p>
                         {% elseif category[categoryIndex] == "damage"%}
-                          <p class="text-muted">damage : {{building.damage}}</p>
+                            <p class="text-muted">damage : {{building.damage}}</p>
                         {% else %}
-                          <p class="text-muted">unite production : {{building.unitesPerHour}}</p>
+                            <p class="text-muted">unite production : {{building.unitesPerHour}}</p>
                         {% endif %}
                     </div>
                   </div>
                   <div class="card-body">
                     {% if isBuy %}
-                      <p class="card-text">Owned: {{isBuy}}</br>Price: {{ building.price }}$</p>
+                        <p class="card-text">Owned: {{isBuy}}</br>Price: {{ building.price }}$</p>
                     {% else %}
-                      <p class="card-text">Price: {{ building.price }}$</p>
+                        <p class="card-text">Price: {{ building.price }}$</p>
                     {% endif %}
                     {% if myBuilding.upgrading is defined and myBuilding.upgrading %}
                     {% else %}
@@ -101,10 +101,11 @@
                             style="width:0%;" ></div>
                         {% if isBuy and myBuilding.upgrading %}
                             <script type="text/javascript">
-                                name = {{ myBuilding.type.id | json_encode() | raw }};
-                                diffUpgrade = {{ date(myBuilding.startupgrade).diff(date(myBuilding.endupgrade)) | json_encode() | raw }};
-                                myDiffUpgrade = {{ date(myBuilding.startupgrade).diff(date('now')) | json_encode() | raw }};
-                                addWidthProgressBar(name, diffUpgrade, myDiffUpgrade);
+                                addWidthProgressBar(
+                                    {{ myBuilding.type.id | json_encode() | raw }},
+                                    {{ date(myBuilding.startupgrade).diff(date(myBuilding.endupgrade)) | json_encode() | raw }}, 
+                                    {{ date(myBuilding.startupgrade).diff(date('now')) | json_encode() | raw }}
+                                );
                             </script>
                         {% endif %}
                     </div>

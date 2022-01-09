@@ -43,6 +43,9 @@ class User implements UserInterface
     #[ORM\ManyToMany(targetEntity: OngoingAtk::class, mappedBy: 'playerID')]
     private $ongoingAtks;
 
+    #[ORM\Column(type: 'datetime')]
+    private $lastUpdate;
+
     public function __construct()
     {
         $this->batimentsOwned = new ArrayCollection();
@@ -204,6 +207,18 @@ class User implements UserInterface
         if ($this->ongoingAtks->removeElement($ongoingAtk)) {
             $ongoingAtk->removePlayerID($this);
         }
+
+        return $this;
+    }
+
+    public function getLastUpdate(): ?\DateTimeInterface
+    {
+        return $this->lastUpdate;
+    }
+
+    public function setLastUpdate(\DateTimeInterface $lastUpdate): self
+    {
+        $this->lastUpdate = $lastUpdate;
 
         return $this;
     }
