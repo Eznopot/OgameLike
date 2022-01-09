@@ -27,8 +27,8 @@
                     setInterval(() => {
                         addGold += prodGoldPerSecond;
                         addUnites += prodUnitePerSecond;
-                        document.getElementById('user_gold').innerHTML = parseInt(userGold) + parseInt(addGold);
-                        document.getElementById('user_unites').innerHTML = parseInt(userUnites) + parseInt(addUnites);
+                        document.getElementById('user_gold').innerHTML = parseInt(userGold) + parseInt(addGold) + ' Gold';
+                        document.getElementById('user_unites').innerHTML = parseInt(userUnites) + parseInt(addUnites) + ' Unites';
                     }, 1000);
                 }
 
