@@ -71,6 +71,14 @@ class Recycler extends Fixture
             $manager->persist($build);
         }
 
+        $planet = new Planets();
+        $planet->setName("Neptune")
+            ->setDefenseLvl(2)
+            ->setDistance(1200);
+        $planet2 = new Planets();
+        $planet2->setName("Pluto")
+            ->setDefenseLvl(1)
+            ->setDistance(500);
         for ($i=0; $i < 4; $i++) {
 
 
@@ -114,18 +122,13 @@ class Recycler extends Fixture
                 $user->addBatimentsOwned($buildingOwned);
             }
             $manager->persist($user);
+            if($i < 2) {
+                $planet->addPlayer($user);
+            } else {
+                $planet2->addPlayer($user);
+            }
         }
-
-        $planet = new Planets();
-        $planet->setName("Neptune")
-            ->setDefenseLvl(2)
-            ->setDistance(1200);
         $manager->persist($planet);
-
-        $planet2 = new Planets();
-        $planet2->setName("Pluto")
-            ->setDefenseLvl(1)
-            ->setDistance(500);
         $manager->persist($planet2);
         $manager->flush();
     }

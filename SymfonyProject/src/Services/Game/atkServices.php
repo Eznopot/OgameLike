@@ -23,4 +23,8 @@ class atkServices
         return $doctrines->getRepository(Planets::class)->findAll();
     }
 
+    public function endAttack() {
+
+    }
+
 }

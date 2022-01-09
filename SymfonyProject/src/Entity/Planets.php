@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PlanetsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PlanetsRepository::class)]
@@ -24,6 +26,14 @@ class Planets
 
     #[ORM\OneToOne(mappedBy: 'planetID', targetEntity: OngoingAtk::class, cascade: ['persist', 'remove'])]
     private $ongoingAtk;
+
+    #[ORM\OneToMany(mappedBy: 'planet', targetEntity: User::class)]
+    private $Players;
+
+    public function __construct()
+    {
+        $this->Players = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +96,36 @@ class Planets
         }
 
         $this->ongoingAtk = $ongoingAtk;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getPlayers(): Collection
+    {
+        return $this->Players;
+    }
+
+    public function addPlayer(User $player): self
+    {
+        if (!$this->Players->contains($player)) {
+            $this->Players[] = $player;
+            $player->setPlanet($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlayer(User $player): self
+    {
+        if ($this->Players->removeElement($player)) {
+            // set the owning side to null (unless already changed)
+            if ($player->getPlanet() === $this) {
+                $player->setPlanet(null);
+            }
+        }
 
         return $this;
     }

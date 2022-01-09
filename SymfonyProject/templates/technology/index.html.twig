@@ -55,7 +55,8 @@
                     <script type="text/javascript">
                         addWidthProgressBar(
                             {{ techno.type.id | json_encode() | raw }},
-                            {{ date(techno.startupgrade).diff(date(techno.endupgrade)) | json_encode() | raw }},
+                            {{ d
+                            ate(techno.startupgrade).diff(date(techno.endupgrade)) | json_encode() | raw }},
                             {{ date(techno.startupgrade).diff(date('now')) | json_encode() | raw }}
                         );
                     </script>

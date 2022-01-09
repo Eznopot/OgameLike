@@ -46,6 +46,10 @@ class User implements UserInterface
     #[ORM\Column(type: 'datetime')]
     private $lastUpdate;
 
+    #[ORM\ManyToOne(targetEntity: Planets::class, inversedBy: 'Players')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $planet;
+
     public function __construct()
     {
         $this->batimentsOwned = new ArrayCollection();
@@ -219,6 +223,18 @@ class User implements UserInterface
     public function setLastUpdate(\DateTimeInterface $lastUpdate): self
     {
         $this->lastUpdate = $lastUpdate;
+
+        return $this;
+    }
+
+    public function getPlanet(): ?Planets
+    {
+        return $this->planet;
+    }
+
+    public function setPlanet(?Planets $planet): self
+    {
+        $this->planet = $planet;
 
         return $this;
     }
