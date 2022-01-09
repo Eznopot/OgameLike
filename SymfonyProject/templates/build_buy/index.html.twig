@@ -6,30 +6,6 @@
 {% block recycler_subName %} Buy some Building {% endblock %}
 {% block recycler_explenation %} here you can buy building and get more resources {% endblock %}
 
-{% block javascripts %}
-    <script type="text/javascript">
-        if (window.history.replaceState) {
-            window.history.replaceState( null, null, window.location.href );
-        }
-        function addWidthProgressBar(name, diffUpgrade, myDiffUpgrade) {
-            let diffUpgradeStamp = (diffUpgrade.s * 100 / 60) + (diffUpgrade.i * 100 / 60) * 100 + (diffUpgrade.h * 100 / 60) * 10000;
-            let myDiffUpgradeStamp = (myDiffUpgrade.s * 100 / 60) + (myDiffUpgrade.i * 100 / 60) * 100 + (myDiffUpgrade.h * 100 / 60) * 10000;
-            let progressBar = document.getElementById('progress_bar_' + name);
-            let width = 0;
-
-            setInterval(() => {
-                width = myDiffUpgradeStamp * 100 / diffUpgradeStamp;
-                progressBar.style = 'width: ' + width + '%;'
-
-                if (width > 99) {
-                    location.reload();
-                }
-
-                myDiffUpgradeStamp++;
-            }, 1000);
-        }
-    </script>
-{% endblock %}
 
 {% block body %}
     {% for buildings in allBuilding %}

@@ -6,24 +6,6 @@
 {% block recycler_subName %} Building Production {% endblock %}
 {% block recycler_explenation %} here you can see the production of yours buildings {% endblock %}
 
-{% block javascripts %}
-    <script type="text/javascript">
-        function calcAutoWidthProgressBar(id, speedPerHour) {
-            let progressBar = document.getElementById('progress_bar_' + id);
-            let width = 0;
-
-            setInterval(() => {
-                width += 100 / (3600 / speedPerHour);
-                progressBar.style = 'width: ' + width + '%;'
-                if (width > 99) {
-                    width = 0;
-                }
-            }, 1000);
-
-        }
-    </script>
-{% endblock %}
-
 {% block body %}
     {% set idUniquePage = 0 %}
     {% for building in buildingsOwned %}
@@ -67,6 +49,19 @@
                                 {{ building.type.id | json_encode() | raw }} +''+ {{ idUniquePage  | json_encode() | raw }} + '_unites', 
                                 {{ building.type.unitesPerHour | json_encode() | raw }}
                             );
+                            function calcAutoWidthProgressBar(id, speedPerHour) {
+                                let progressBar = document.getElementById('progress_bar_' + id);
+                                let width = 0;
+
+                                setInterval(() => {
+                                    width += 100 / (3600 / speedPerHour);
+                                    progressBar.style = 'width: ' + width + '%;'
+                                    if (width > 99) {
+                                        width = 0;
+                                    }
+                                }, 1000);
+
+                            }
                         </script>
                     </div>
                 </td>

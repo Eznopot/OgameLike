@@ -11,10 +11,78 @@
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
+
+            <script type="text/javascript">
+                function addGoldUnit(prodGoldPerSecond, prodUnitePerSecond) {
+                    let userGold = document.getElementById('user_gold').innerHTML;
+                    let userUnites = document.getElementById('user_unites').innerHTML;
+                    let addGold = 0;
+                    let addUnites = 0;
+
+                    setInterval(() => {
+                        addGold += prodGoldPerSecond;
+                        addUnites += prodUnitePerSecond;
+                        document.getElementById('user_gold').innerHTML = parseInt(userGold) + parseInt(addGold) + ' Gold';
+                        document.getElementById('user_unites').innerHTML = parseInt(userUnites) + parseInt(addUnites) + ' Unites';
+                    }, 1000);
+                }
+            </script>
+
         {% endblock %}
     </head>
 
     <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href={{ path('home') }}>OgameLike</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('home') }}>Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('player') }}>Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('technology') }}>Technology</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('build_production') }}>Build production</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('build_buy') }}>Build buy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href={{ path('ladder') }}>Ladder</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex">
+                        <p id="user_gold" class="text-warning" style="margin-right: 16px;">{{ user.gold }} Gold</p>
+                        <p id="user_unites" class="text-warning" style="margin-right: 16px;">{{ user.units }} Unites</p>
+                        {% set prodGoldPerSecond = 0 %}
+                        {% set prodUnitePerSecond = 0 %}
+
+                        {% for buildOwned in user.batimentsOwned %}
+                            {% set prodGoldPerSecond = prodGoldPerSecond + buildOwned.type.goldPerHour / 3600 %}
+                            {% set prodUnitePerSecond = prodUnitePerSecond + buildOwned.type.unitesPerHour / 3600 %}
+                        {% endfor %}
+                        <p class="text-warning">{{ prodGoldPerSecond }} Gold/sec</p>
+                        <script type="text/javascript">
+                            addGoldUnit(
+                                {{ prodGoldPerSecond | json_encode() | raw }},
+                                {{ prodUnitePerSecond | json_encode() | raw }}
+                            );
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
         <div class="container">
           {% block body %}{% endblock %}
         </div>

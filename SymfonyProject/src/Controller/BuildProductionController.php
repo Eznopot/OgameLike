@@ -8,7 +8,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BuildProductionController extends AbstractController
 {
-
     #[Route('/build/production', name: 'build_production')]
     public function index(): Response
     {
@@ -18,18 +17,23 @@ class BuildProductionController extends AbstractController
         $buildingsOwned = $this->getUser()->getBatimentsOwned();
         $needToAddInTime = $this->getUser()->getLastUpdate()->diff($dateNow);
         $needToAddInTime = $needToAddInTime->s + $needToAddInTime->i * 60 + $needToAddInTime->h * 3600 + $needToAddInTime->d * 86400;
-        $addGold = 0;
+        $addGold = $this->getUser()->getGold();
+        $addUnites = $this->getUser()->getGold();
 
         for ($i=0; $i < count($buildingsOwned); $i++) {
             $addGold += ($buildingsOwned[$i]->getType()->getGoldPerHour() / 3600) * $needToAddInTime;
+            $addUnites += ($buildingsOwned[$i]->getType()->getUnitesPerHour() / 3600) * $needToAddInTime;
         }
 
-        dump($addGold);
+        $this->getUser()->setGold($addGold)
+                    ->setUnits($addUnites)
+                    ->setlastUpdate($dateNow);
 
-        // $this->getUser()->setLastUpdate();
+        $em->persist($this->getUser());
+        $em->flush();
 
         return $this->render('build_production/index.html.twig', [
-            'User' => $this->getUser(),
+            'user' => $this->getUser(),
             'buildingsOwned' => $buildingsOwned
         ]);
     }

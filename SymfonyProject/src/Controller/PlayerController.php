@@ -13,14 +13,12 @@ class PlayerController extends AbstractController
     #[Route('/player', name: 'player')]
     public function index(): Response
     {
-        $id = 1;
-        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-        if ($user)
-          $image = base64_encode(stream_get_contents($user->getImage()));
+        if ($this->getUser())
+          $image = base64_encode(stream_get_contents($this->getUser()->getImage()));
         else $image = null;
         
         return $this->render('player/index.html.twig', [
-            'player' => $user,
+            'user' => $this->getUser(),
             'image' => $image
         ]);
     }

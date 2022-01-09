@@ -51,6 +51,7 @@ class TechnologyController extends AbstractController
 
 
         return $this->render('technology/index.html.twig', [
+            'user' => $this->getUser(),
             'technoOwned' => $this->getUser()->getUserTechnoOwned()
         ]);
     }
