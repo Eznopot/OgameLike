@@ -30,8 +30,9 @@ class Planets
     #[ORM\OneToMany(mappedBy: 'planet', targetEntity: User::class)]
     private $Players;
 
-    #[ORM\Column(type: 'blob', nullable: true)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $image;
+    
 
     public function __construct()
     {
@@ -81,7 +82,7 @@ class Planets
 
     public function isUnderAtk(): ?bool
     {
-        if($this->getOngoingAtk() != null)
+        if ($this->getOngoingAtk() != null)
             return true;
         return false;
     }
@@ -133,12 +134,12 @@ class Planets
         return $this;
     }
 
-    public function getImage()
+    public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setImage($image): self
+    public function setImage(?string $image): self
     {
         $this->image = $image;
 

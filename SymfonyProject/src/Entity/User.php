@@ -28,9 +28,6 @@ class User implements UserInterface
     #[ORM\Column(type: 'integer')]
     private $elo;
 
-    #[ORM\Column(type: 'blob', nullable: true)]
-    private $image;
-
     #[ORM\ManyToMany(targetEntity: BatimentOwned::class)]
     private $batimentsOwned;
 
@@ -49,6 +46,9 @@ class User implements UserInterface
     #[ORM\ManyToOne(targetEntity: Planets::class, inversedBy: 'Players')]
     #[ORM\JoinColumn(nullable: false)]
     private $planet;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $image;
 
     public function __construct()
     {
@@ -106,18 +106,6 @@ class User implements UserInterface
     public function setElo(int $elo): self
     {
         $this->elo = $elo;
-
-        return $this;
-    }
-
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    public function setImage($image): self
-    {
-        $this->image = $image;
 
         return $this;
     }
@@ -235,6 +223,18 @@ class User implements UserInterface
     public function setPlanet(?Planets $planet): self
     {
         $this->planet = $planet;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }
