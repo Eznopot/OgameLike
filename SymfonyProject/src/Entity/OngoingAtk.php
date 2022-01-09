@@ -22,7 +22,7 @@ class OngoingAtk
     private $difficuly;
 
     #[ORM\Column(type: 'integer')]
-    private $timeOfAtk;
+    private $endTime;
 
     #[ORM\OneToOne(inversedBy: 'ongoingAtk', targetEntity: Planets::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
@@ -65,14 +65,14 @@ class OngoingAtk
         return $this;
     }
 
-    public function getTimeOfAtk(): ?int
+    public function getEndTime(): ?int
     {
-        return $this->timeOfAtk;
+        return $this->endTime;
     }
 
-    public function setTimeOfAtk(int $timeOfAtk): self
+    public function setEndTime(int $endTime): self
     {
-        $this->timeOfAtk = $timeOfAtk;
+        $this->endTime = $endTime;
 
         return $this;
     }

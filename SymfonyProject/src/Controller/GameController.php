@@ -61,7 +61,7 @@ class GameController extends AbstractController
             $atk = new OngoingAtk();
             $atk->setDifficuly((5 - $planet->getDefenseLvl()) * 20 + ($unitNbr*2))
                 ->setStart(time())
-                ->setTimeOfAtk($planet->getDistance())
+                ->setEndTime($planet->getDistance())
                 ->addPlayerID($this->getUser())
                 ->setPlanetID($planet);
             $em->persist($atk);

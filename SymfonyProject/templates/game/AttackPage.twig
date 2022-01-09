@@ -12,16 +12,6 @@
         if (window.history.replaceState) {
             window.history.replaceState( null, null, window.location.href );
         }
-        function lunchAtk(PlayerID, planetID, planetLvl, planetDistance) {
-            let unitNbr = document.getElementById('unit-slider').value;
-            let successRate = (5 - planetLvl) * 20 + (unitNbr*2);
-            let startTime = ~~(+new Date() / 1000);
-            console.log(planetID);
-            console.log(successRate);
-            console.log(startTime);
-            console.log(planetDistance);
-
-        }
     </script>
 {% endblock %}
 
