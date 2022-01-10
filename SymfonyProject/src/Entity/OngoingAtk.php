@@ -15,13 +15,13 @@ class OngoingAtk
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'datetime')]
     private $start;
 
     #[ORM\Column(type: 'integer')]
     private $difficuly;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'datetime')]
     private $endTime;
 
     #[ORM\OneToOne(inversedBy: 'ongoingAtk', targetEntity: Planets::class, cascade: ['persist', 'remove'])]

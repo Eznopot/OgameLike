@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220109205938 extends AbstractMigration
+final class Version20220110001953 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -24,7 +24,7 @@ final class Version20220109205938 extends AbstractMigration
         $this->addSql('CREATE TABLE batiment_owned (id INT AUTO_INCREMENT NOT NULL, type_id INT NOT NULL, level INT NOT NULL, startupgrade DATETIME DEFAULT NULL, endupgrade DATETIME DEFAULT NULL, upgrading TINYINT(1) DEFAULT NULL, INDEX IDX_8C5D3026C54C8C93 (type_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE batiments (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(25) NOT NULL, price INT NOT NULL, lvl_max INT NOT NULL, gold_per_hour INT NOT NULL, image LONGBLOB NOT NULL, damage INT NOT NULL, level INT NOT NULL, hp INT NOT NULL, damage_per_lvl INT NOT NULL, gold_per_hour_per_lvl INT NOT NULL, hp_per_lvl INT NOT NULL, upgrade_time INT NOT NULL, unites_per_hour_per_lvl INT DEFAULT NULL, unites_per_hour INT DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE map (id INT AUTO_INCREMENT NOT NULL, size_x INT NOT NULL, size_y INT NOT NULL, name VARCHAR(25) NOT NULL, level INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE ongoing_atk (id INT AUTO_INCREMENT NOT NULL, planet_id_id INT NOT NULL, start INT NOT NULL, difficuly INT NOT NULL, end_time INT NOT NULL, success_rate INT NOT NULL, UNIQUE INDEX UNIQ_1AC6CF2B6B47FF93 (planet_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE ongoing_atk (id INT AUTO_INCREMENT NOT NULL, planet_id_id INT NOT NULL, start DATETIME NOT NULL, difficuly INT NOT NULL, end_time DATETIME NOT NULL, success_rate INT NOT NULL, UNIQUE INDEX UNIQ_1AC6CF2B6B47FF93 (planet_id_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE ongoing_atk_user (ongoing_atk_id INT NOT NULL, user_id INT NOT NULL, INDEX IDX_6D86563E6C3CC02F (ongoing_atk_id), INDEX IDX_6D86563EA76ED395 (user_id), PRIMARY KEY(ongoing_atk_id, user_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE planets (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, defense_lvl INT DEFAULT NULL, distance INT DEFAULT NULL, image VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE technologies (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(25) NOT NULL, price INT NOT NULL, lvl_max INT NOT NULL, description VARCHAR(255) DEFAULT NULL, damage INT DEFAULT NULL, gold_boost INT DEFAULT NULL, damage_per_level INT DEFAULT NULL, gold_boost_per_level INT DEFAULT NULL, upgrade_time INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
