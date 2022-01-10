@@ -52,15 +52,14 @@ class GameController extends AbstractController
 
         for ($i=0; $i < $allOnGoingAtk->count(); $i++) {
             $dateNow = new \DateTime('now');
-            $dateBase = new \DateTime('2000-01-01');
             $endOnGoingAtk = $allOnGoingAtk[$i]->getEndTime();
 
-            if ($endOnGoingAtk->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s')) {
+            if (!$allOnGoingAtk[$i]->getIdEnded() && $endOnGoingAtk->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s')) {
 
                 $uniteAtk = $allOnGoingAtk[$i]->getSuccessRate() - $allOnGoingAtk[$i]->getUnitsAtk();
 
                 $allBuildUserEnemi = array();
-                $planetAtk = $allOnGoingAtk[$i]->getPlanetId();
+                $planetAtk = $allOnGoingAtk[$i]->getPlanets();
                 for ($j=0; $j < $planetAtk->getPlayers()->count(); $j++) {
                     $BuildUserEnemie = $planetAtk->getPlayers()[$j]->getBatimentsOwned();
                     for ($k=0; $k < $BuildUserEnemie->count(); $k++) {
@@ -84,9 +83,9 @@ class GameController extends AbstractController
                         $uniteAtk--;
                     }
                 }
-                $this->getUser()->removeOngoingAtk($allOnGoingAtk[$i]);
                 $this->getUser()->setUnits($uniteAtk);
-
+                $allOnGoingAtk[$i]->setIdEnded(true);
+                $em->persist($allOnGoingAtk[$i]);
                 $em->persist($this->getUser());
             }
         }
@@ -116,9 +115,13 @@ class GameController extends AbstractController
                 ->setSuccessRate($damagePlanetAtk)
                 ->setStart(new \DateTime('now'))
                 ->setEndTime($endAtk)
-                ->addPlayerID($this->getUser())
-                ->setPlanetID($planetAtk)
-                ->setUnitsAtk($unitsNbr);
+                ->setPlayerID($this->getUser())
+                ->setPlanets($planetAtk)
+                ->setUnitsAtk($unitsNbr)
+                ->setIdEnded(false);
+
+            $this->getUser()->setUnits($this->getUser()->getUnits() - $unitsNbr);
+            $em->persist($this->getUser());
             $em->persist($ongoinAtk);
         }
         $em->flush();

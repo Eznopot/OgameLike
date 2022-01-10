@@ -38,6 +38,9 @@ class OngoingAtk
     #[ORM\JoinColumn(nullable: false)]
     private $playerID;
 
+    #[ORM\Column(type: 'boolean')]
+    private $IdEnded;
+
     public function __construct()
     {
         $this->playerID = new ArrayCollection();
@@ -129,6 +132,18 @@ class OngoingAtk
     public function setPlayerID(?User $playerID): self
     {
         $this->playerID = $playerID;
+
+        return $this;
+    }
+
+    public function getIdEnded(): ?bool
+    {
+        return $this->IdEnded;
+    }
+
+    public function setIdEnded(bool $IdEnded): self
+    {
+        $this->IdEnded = $IdEnded;
 
         return $this;
     }

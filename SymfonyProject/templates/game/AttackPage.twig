@@ -59,7 +59,7 @@
                         {% set isUnderAtk = false %}
                         {% set UserAtks = null %}
                         {% for UserongoingAtks in user.ongoingAtks %}
-                            {% if UserongoingAtks.planetID.id == planet.id %}
+                            {% if not UserongoingAtks.idEnded and UserongoingAtks.planets.id == planet.id %}
                                 {% set UserAtks = UserongoingAtks %}
                                 {% set isUnderAtk = true %}
                             {% endif %}
