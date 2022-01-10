@@ -22,8 +22,8 @@
                     let userGold;
                     let userUnites;
 
-                    let addGold = 0;
-                    let addUnites = 0;
+                    let addGold = document.querySelectorAll('[id=user_gold]')[0].innerHTML;
+                    let addUnites = document.querySelectorAll('[id=user_unites]')[0].innerHTML;
 
                     setInterval(() => {
                         userGold = document.querySelectorAll('[id=user_gold]');
@@ -31,11 +31,12 @@
 
                         addGold += prodGoldPerSecond;
                         addUnites += prodUnitePerSecond;
+
                         for (let i = 0; i < userGold.length; i++) {
-                            userGold[i].innerHTML = parseInt(userGold[i].innerHTML) + parseInt(addGold);
+                            userGold[i].innerHTML = parseInt(addGold);
                         }
                         for (let i = 0; i < userUnites.length; i++) {
-                            userUnites[i].innerHTML = parseInt(userUnites[i].innerHTML) + parseInt(addUnites);
+                            userUnites[i].innerHTML = parseInt(addUnites);
                         }
                     }, 1000);
                 }

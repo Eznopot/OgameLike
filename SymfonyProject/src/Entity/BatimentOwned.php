@@ -29,6 +29,9 @@ class BatimentOwned
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $upgrading;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $hp;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +93,18 @@ class BatimentOwned
     public function setUpgrading(?bool $upgrading): self
     {
         $this->upgrading = $upgrading;
+
+        return $this;
+    }
+
+    public function getHp(): ?int
+    {
+        return $this->hp;
+    }
+
+    public function setHp(?int $hp): self
+    {
+        $this->hp = $hp;
 
         return $this;
     }

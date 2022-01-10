@@ -43,12 +43,21 @@ class BuildBuyController extends AbstractController
             $endUpgrade = new \DateTime('now');
             $endUpgrade->add(new \DateInterval('PT'.$buildBuy->getUpgradeTime().'S'));
 
+            $levelBuild = 0;
+            for ($i=0; $i < count($this->getUser()->getBatimentsOwned()); $i++) {
+                if ($this->getUser()->getBatimentsOwned()[$i]->getType()->getId() == $buyId) {
+                    $levelBuild = $this->getUser()->getBatimentsOwned()[$i]->getLevel();
+                    break;
+                }
+            }
+
             $newBuild = new BatimentOwned($buildBuy);
             $newBuild->setType($buildBuy)
-                    ->setLevel(0)
+                    ->setLevel($levelBuild)
                     ->setStartupgrade(new \DateTime('now'))
                     ->setEndupgrade($endUpgrade)
-                    ->setUpgrading(True);
+                    ->setUpgrading(True)
+                    ->setHp($buildBuy->getHp() + ($buildBuy->getHpPerLvl() * $newBuild->getLevel()));
             $em->persist($newBuild);
 
             $this->getUser()->addBatimentsOwned($newBuild);
@@ -96,7 +105,6 @@ class BuildBuyController extends AbstractController
             'unite',
             'damage'
         );
-        dump($goldBuilding);
         return $this->render('build_buy/index.html.twig', [
             'user' => $this->getUser(),
             'category' => $category,

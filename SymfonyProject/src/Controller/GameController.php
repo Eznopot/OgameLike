@@ -27,6 +27,7 @@ class GameController extends AbstractController
 
 
         return $this->render('game/resourcesPage.twig', array(
+            "user" => $this->getUser(),
             "goldAmount" => $this->getUser()->getGold(),
             "unitAmount" => $this->getUser()->getUnits(),
             "goldBuilding" => 12,
@@ -39,58 +40,59 @@ class GameController extends AbstractController
      * @Route("/attack", name="attack_page")
      */
     public function attackPage() : Response {
-        $atkServices = new atkServices();
-
-        $planetArray = $atkServices->getPlanetList($this->getDoctrine());
-        $ongoingAtk = $atkServices->getAtkList($this->getDoctrine());
         $em = $this->getDoctrine()->getManager();
         $request = Request::createFromGlobals();
-        $unitNbr = $request->request->get('Units');
 
-        /** @var Planets $planet */
-        $planet = null;
+        $allPlanet = $this->getDoctrine()->getRepository(Planets::class)->findAll();
 
-        for ($i=0; $i < count($planetArray); $i++)
-        {
-            if($planetArray[$i]->getId() == $request->request->get('planetID')) {
-               $planet = $planetArray[$i];
-               break;
-            }
+        $unitsNbr = $request->request->get('Units');
+        $planetId = $request->request->get('planetID');
+
+        $allOnGoingAtk = $this->getUser()->getOngoingAtks();
+        for ($i=0; $i < $allOnGoingAtk->count(); $i++) {
             $dateNow = new \DateTime('now');
             $dateBase = new \DateTime('2000-01-01');
-            if ($planetArray[$i]->isUnderAtk() !== false &&
-                $planetArray[$i]->getOngoingAtk()->getEndTime()->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s') &&
-                $planetArray[$i]->getOngoingAtk()->getEndTime()->format('Y-m-d h:i:s')  != $dateBase->format('Y-m-d h:i:s'))
-            {
-                $planetArray[$i]->getOngoingAtk()->getPlayerID()->setGold($planetArray[$i]->getOngoingAtk()->getPlayerID()->getGold() + ($planetArray[$i]->getDefenseLvl() * 100));
-                $em->persist($planetArray[$i]->getOngoingAtk()->getPlayerID());
+            $endOnGoingAtk = $allOnGoingAtk[$i]->getEndTime();
+
+            if ($endOnGoingAtk->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s')) {
+                
             }
         }
-        if ($unitNbr != 0 and $planet !== null) {
-            $atk = new OngoingAtk();
-            $endTime = new \DateTime('now');
-            $endTime->add(new \DateInterval('PT'.$planet->getDistance().'S'));
-            $atk->setDifficuly($planet->getDefenseLvl())
-                ->setSuccessRate((5 - $planet->getDefenseLvl()) * 20 + ($unitNbr*2))
+
+        if ($unitsNbr !== null and $planetId !== null) {
+            $planetAtk = $this->getDoctrine()->getRepository(Planets::class)->find($planetId);
+            $myPlanet = $this->getUser()->getPlanet()->getDistance();
+            $diffDistance = $planetAtk->getDistance() - $myPlanet;
+            $diffDistance = ($diffDistance < 0) ? $diffDistance * -1 : $diffDistance;
+
+            $endAtk = new \DateTime('now');
+            $endAtk->add(new \DateInterval('PT'.$diffDistance.'S'));
+
+            $damagePlanetAtk = 0;
+            $hpPlanetAtk = 0;
+            for ($i=0; $i < $planetAtk->getPlayers()->count(); $i++) {
+                $BuildUserEnemie = $planetAtk->getPlayers()[$i]->getBatimentsOwned();
+                for ($j=0; $j < $BuildUserEnemie->count(); $j++) {
+                    $statBuild = $BuildUserEnemie[$j]->getType();
+                    $damagePlanetAtk += $statBuild->getDamage() + ($statBuild->getDamagePerLvl() * $BuildUserEnemie[$j]->getLevel());
+                    $hpPlanetAtk += $BuildUserEnemie[$j]->getHp();
+                }
+            }
+
+            $ongoinAtk = new OngoingAtk();
+            $ongoinAtk->setDifficuly($hpPlanetAtk)
+                ->setSuccessRate($damagePlanetAtk)
                 ->setStart(new \DateTime('now'))
-                ->setEndTime($endTime)
+                ->setEndTime($endAtk)
                 ->addPlayerID($this->getUser())
-                ->setPlanetID($planet);
-            $em->persist($atk);
-            $this->getUser()->setUnits($this->getUser()->getUnits() - $unitNbr);
-
-            $em->persist($this->getUser());
-
-            $planet->setOngoingAtk($atk);
-            $em->persist($planet);
-            $em->flush();
+                ->setPlanetID($planetAtk);
+            $em->persist($ongoinAtk);
         }
+        $em->flush();
 
         return $this->render('game/AttackPage.twig', array(
             "user" => $this->getUser(),
-            "unitAmount" => $this->getUser()->getUnits(),
-            "planetList" => $planetArray,
-            "atkList" => $ongoingAtk
+            "planetList" => $allPlanet
         ));
     }
 }

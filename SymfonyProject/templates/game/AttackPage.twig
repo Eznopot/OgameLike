@@ -52,7 +52,9 @@
                     </script>
                     <p class="card-text">Name: {{ planet.getName() }}</p>
                     <p class="card-text">Defense level: {{ planet.getDefenseLvl() }}</p>
-                    <p class="card-text">Distance: {{ planet.getDistance() }}</p>
+                    <p class="card-text">Distance: {{ planet.distance() }}</p>
+                    {% set distanceFromYou = planet.getDistance() - user.planet.distance() %}
+                    <p class="card-text">Distance from you: {{ distanceFromYou < 0 ? distanceFromYou * -1 : distanceFromYou }}</p>
                     {% if planet.id != user.planet.id %}
                         {% if planet.isUnderAtk() %}
                             <p class="card-text">Is under attack: Yes</p>
@@ -81,7 +83,7 @@
                                     name="Units"
                                     class="form-range" 
                                     id="unit-slider"
-                                    value="0" min="0" max="{{ unitAmount }}" 
+                                    value="0" min="0" max="{{ user.units }}" 
                                     oninput="this.nextElementSibling.value = this.value"
                                 >
                                 <output>0</output>

@@ -18,16 +18,25 @@
 
             <script type="text/javascript">
                 function addGoldUnit(prodGoldPerSecond, prodUnitePerSecond) {
-                    let userGold = document.getElementById('user_gold').innerHTML;
-                    let userUnites = document.getElementById('user_unites').innerHTML;
-                    let addGold = 0;
-                    let addUnites = 0;
+                    let userGold;
+                    let userUnites;
+
+                    let addGold = document.querySelectorAll('[id=user_gold]')[0].innerHTML;
+                    let addUnites = document.querySelectorAll('[id=user_unites]')[0].innerHTML;
 
                     setInterval(() => {
+                        userGold = document.querySelectorAll('[id=user_gold]');
+                        userUnites = document.querySelectorAll('[id=user_unites]');
+
                         addGold += prodGoldPerSecond;
                         addUnites += prodUnitePerSecond;
-                        document.getElementById('user_gold').innerHTML = parseInt(userGold) + parseInt(addGold) + ' Gold';
-                        document.getElementById('user_unites').innerHTML = parseInt(userUnites) + parseInt(addUnites) + ' Unites';
+
+                        for (let i = 0; i < userGold.length; i++) {
+                            userGold[i].innerHTML = parseInt(addGold);
+                        }
+                        for (let i = 0; i < userUnites.length; i++) {
+                            userUnites[i].innerHTML = parseInt(addUnites);
+                        }
                     }, 1000);
                 }
             </script>
