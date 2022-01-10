@@ -33,7 +33,8 @@ class OngoingAtk
     #[ORM\Column(type: 'integer', nullable: true)]
     private $UnitsAtk;
 
-    #[ORM\ManyToMany(targetEntity: Planets::class, mappedBy: 'ongoingAtk')]
+    #[ORM\ManyToOne(targetEntity: Planets::class, inversedBy: 'ongoingAtk')]
+    #[ORM\JoinColumn(nullable: false)]
     private $planets;
 
     public function __construct()
@@ -131,29 +132,14 @@ class OngoingAtk
         return $this;
     }
 
-    /**
-     * @return Collection|Planets[]
-     */
-    public function getPlanets(): Collection
+    public function getPlanets(): ?Planets
     {
         return $this->planets;
     }
 
-    public function addPlanet(Planets $planet): self
+    public function setPlanets(?Planets $planets): self
     {
-        if (!$this->planets->contains($planet)) {
-            $this->planets[] = $planet;
-            $planet->addOngoingAtk($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlanet(Planets $planet): self
-    {
-        if ($this->planets->removeElement($planet)) {
-            $planet->removeOngoingAtk($this);
-        }
+        $this->planets = $planets;
 
         return $this;
     }

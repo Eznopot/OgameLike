@@ -30,9 +30,8 @@ class Planets
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $image;
 
-    #[ORM\ManyToMany(targetEntity: OngoingAtk::class, inversedBy: 'planets')]
+    #[ORM\OneToMany(mappedBy: 'planets', targetEntity: OngoingAtk::class, orphanRemoval: true)]
     private $ongoingAtk;
-    
 
     public function __construct()
     {
@@ -142,6 +141,7 @@ class Planets
     {
         if (!$this->ongoingAtk->contains($ongoingAtk)) {
             $this->ongoingAtk[] = $ongoingAtk;
+            $ongoingAtk->setPlanets($this);
         }
 
         return $this;
@@ -149,7 +149,12 @@ class Planets
 
     public function removeOngoingAtk(OngoingAtk $ongoingAtk): self
     {
-        $this->ongoingAtk->removeElement($ongoingAtk);
+        if ($this->ongoingAtk->removeElement($ongoingAtk)) {
+            // set the owning side to null (unless already changed)
+            if ($ongoingAtk->getPlanets() === $this) {
+                $ongoingAtk->setPlanets(null);
+            }
+        }
 
         return $this;
     }
