@@ -24,9 +24,6 @@ class OngoingAtk
     #[ORM\Column(type: 'datetime')]
     private $endTime;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'ongoingAtks')]
-    private $playerID;
-
     #[ORM\Column(type: 'integer')]
     private $SuccessRate;
 
@@ -36,6 +33,10 @@ class OngoingAtk
     #[ORM\ManyToOne(targetEntity: Planets::class, inversedBy: 'ongoingAtk')]
     #[ORM\JoinColumn(nullable: false)]
     private $planets;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ongoingAtks')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $playerID;
 
     public function __construct()
     {
@@ -84,30 +85,6 @@ class OngoingAtk
         return $this;
     }
 
-    /**
-     * @return Collection|User[]
-     */
-    public function getPlayerID(): Collection
-    {
-        return $this->playerID;
-    }
-
-    public function addPlayerID(User $playerID): self
-    {
-        if (!$this->playerID->contains($playerID)) {
-            $this->playerID[] = $playerID;
-        }
-
-        return $this;
-    }
-
-    public function removePlayerID(User $playerID): self
-    {
-        $this->playerID->removeElement($playerID);
-
-        return $this;
-    }
-
     public function getSuccessRate(): ?int
     {
         return $this->SuccessRate;
@@ -140,6 +117,18 @@ class OngoingAtk
     public function setPlanets(?Planets $planets): self
     {
         $this->planets = $planets;
+
+        return $this;
+    }
+
+    public function getPlayerID(): ?User
+    {
+        return $this->playerID;
+    }
+
+    public function setPlayerID(?User $playerID): self
+    {
+        $this->playerID = $playerID;
 
         return $this;
     }

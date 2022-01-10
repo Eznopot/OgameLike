@@ -37,9 +37,6 @@ class User implements UserInterface
     #[ORM\Column(type: 'integer')]
     private $units;
 
-    #[ORM\ManyToMany(targetEntity: OngoingAtk::class, mappedBy: 'playerID')]
-    private $ongoingAtks;
-
     #[ORM\Column(type: 'datetime')]
     private $lastUpdate;
 
@@ -49,6 +46,9 @@ class User implements UserInterface
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $image;
+
+    #[ORM\OneToMany(mappedBy: 'playerID', targetEntity: OngoingAtk::class)]
+    private $ongoingAtks;
 
     public function __construct()
     {
@@ -176,33 +176,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|OngoingAtk[]
-     */
-    public function getOngoingAtks(): Collection
-    {
-        return $this->ongoingAtks;
-    }
-
-    public function addOngoingAtk(OngoingAtk $ongoingAtk): self
-    {
-        if (!$this->ongoingAtks->contains($ongoingAtk)) {
-            $this->ongoingAtks[] = $ongoingAtk;
-            $ongoingAtk->addPlayerID($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOngoingAtk(OngoingAtk $ongoingAtk): self
-    {
-        if ($this->ongoingAtks->removeElement($ongoingAtk)) {
-            $ongoingAtk->removePlayerID($this);
-        }
-
-        return $this;
-    }
-
     public function getLastUpdate(): ?\DateTimeInterface
     {
         return $this->lastUpdate;
@@ -235,6 +208,36 @@ class User implements UserInterface
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OngoingAtk[]
+     */
+    public function getOngoingAtks(): Collection
+    {
+        return $this->ongoingAtks;
+    }
+
+    public function addOngoingAtk(OngoingAtk $ongoingAtk): self
+    {
+        if (!$this->ongoingAtks->contains($ongoingAtk)) {
+            $this->ongoingAtks[] = $ongoingAtk;
+            $ongoingAtk->setPlayerID($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOngoingAtk(OngoingAtk $ongoingAtk): self
+    {
+        if ($this->ongoingAtks->removeElement($ongoingAtk)) {
+            // set the owning side to null (unless already changed)
+            if ($ongoingAtk->getPlayerID() === $this) {
+                $ongoingAtk->setPlayerID(null);
+            }
+        }
 
         return $this;
     }
