@@ -21,18 +21,21 @@ class BuildBuyController extends AbstractController
 
         for ($i=0; $i < count($this->getUser()->getBatimentsOwned()); $i++) {
             $dateNow = new \DateTime('now');
-            $dateBase = new \DateTime('2000-01-01');
-            $endUpgrade = $this->getUser()->getBatimentsOwned()[$i]->getEndupgrade();
+            $buildOwned = $this->getUser()->getBatimentsOwned()[$i];
+            $endUpgrade = $buildOwned->getEndupgrade();
 
-            if ($endUpgrade->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s') &&
-                $endUpgrade->format('Y-m-d h:i:s') != $dateBase->format('Y-m-d h:i:s')) {
+            if ($endUpgrade != null && $endUpgrade->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s')) {
 
-                $this->getUser()->getBatimentsOwned()[$i]->setUpgrading(False)
-                    ->setEndupgrade($dateBase)
-                    ->setStartupgrade($dateBase)
-                    ->setLevel($this->getUser()->getBatimentsOwned()[$i]->getLevel() + 1);
+                if ($buildOwned->getUpgradingType() == 'Upgrading') {
+                    $buildOwned->setLevel($buildOwned->getLevel() + 1);
+                }
 
-                $em->persist($this->getUser()->getBatimentsOwned()[$i]);
+                $buildOwned->setUpgrading(False)
+                    ->setEndupgrade(null)
+                    ->setStartupgrade(null)
+                    ->setUpgradingType(null);
+
+                $em->persist($buildOwned);
                 $em->flush();
             }
         }
@@ -57,7 +60,8 @@ class BuildBuyController extends AbstractController
                     ->setStartupgrade(new \DateTime('now'))
                     ->setEndupgrade($endUpgrade)
                     ->setUpgrading(True)
-                    ->setHp($buildBuy->getHp() + ($buildBuy->getHpPerLvl() * $newBuild->getLevel()));
+                    ->setHp($buildBuy->getHp() + ($buildBuy->getHpPerLvl() * $newBuild->getLevel()))
+                    ->setUpgradingType('Buy');
             $em->persist($newBuild);
 
             $this->getUser()->addBatimentsOwned($newBuild);
@@ -74,7 +78,8 @@ class BuildBuyController extends AbstractController
 
                     $this->getUser()->getBatimentsOwned()[$i]->setEndupgrade($endUpgrade)
                         ->setStartupgrade(new \DateTime('now'))
-                        ->setUpgrading(True);
+                        ->setUpgrading(True)
+                        ->setUpgradingType('Upgrading');
                     $em->persist($this->getUser()->getBatimentsOwned()[$i]);
                     $em->flush();
                 }

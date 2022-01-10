@@ -61,33 +61,33 @@ class GameController extends AbstractController
 
                 $allBuildUserEnemi = array();
                 $planetAtk = $allOnGoingAtk[$i]->getPlanetId();
-                for ($i=0; $i < $planetAtk->getPlayers()->count(); $i++) {
-                    $BuildUserEnemie = $planetAtk->getPlayers()[$i]->getBatimentsOwned();
-                    for ($j=0; $j < $BuildUserEnemie->count(); $j++) {
-                        $allBuildUserEnemi->array_push($BuildUserEnemie[$j]);
+                for ($j=0; $j < $planetAtk->getPlayers()->count(); $j++) {
+                    $BuildUserEnemie = $planetAtk->getPlayers()[$j]->getBatimentsOwned();
+                    for ($k=0; $k < $BuildUserEnemie->count(); $k++) {
+                        $allBuildUserEnemi[] = $BuildUserEnemie[$k];
                     }
                 }
 
                 while ($uniteAtk) {
-                    $BuildUserEnemi = $allBuildUserEnemi[rand(0, $allBuildUserEnemi->count())];
+                    $planetDeafet = true;
+                    for ($j=0; $j < count($allBuildUserEnemi); $j++) {
+                        if ($allBuildUserEnemi[$j]->getHp()) {
+                            $planetDeafet = false;
+                        }
+                    }
+                    if ($planetDeafet)
+                        break;
+                    $BuildUserEnemi = $allBuildUserEnemi[rand(0, count($allBuildUserEnemi) - 1)];
                     if ($BuildUserEnemi->getHp()) {
                         $BuildUserEnemi->setHp($BuildUserEnemi->getHp() - 1);
                         $em->persist($BuildUserEnemi);
                         $uniteAtk--;
                     }
                 }
+                $this->getUser()->removeOngoingAtk($allOnGoingAtk[$i]);
+                $this->getUser()->setUnits($uniteAtk);
 
-                // for ($i=0; $i < $this->getUser()->getBatimentsOwned()->count(); $i++) {
-
-                // }
-
-
-                // $this->getUser()->setGold($this->getUser()->getGold() + ($allOnGoingAtk[$i]->getPlanetID()->getDefenseLvl() * 100));
-                // $allOnGoingAtk[$i]->getPlanetID()->setOngoingAtk(null);
-                // $em->persist($allOnGoingAtk[$i]->getPlanetID());
-                // unset($this->getUser()->getOngoingAtks()[$i]);
-                // $em->persist($this->getUser());
-
+                $em->persist($this->getUser());
             }
         }
 
@@ -110,8 +110,6 @@ class GameController extends AbstractController
                     $hpPlanetAtk += $BuildUserEnemie[$j]->getHp();
                 }
             }
-
-            dump($hpPlanetAtk);
 
             $ongoinAtk = new OngoingAtk();
             $ongoinAtk->setDifficuly($hpPlanetAtk)

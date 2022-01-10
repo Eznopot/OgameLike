@@ -76,16 +76,16 @@ class Recycler extends Fixture
             $technologiesOwnedAttack = new technologiesOwned();
             $technologiesOwnedAttack->setType($technoAttack)
                                     ->setLevel(0)
-                                    ->setStartupgrade(new \DateTime('2000-01-01'))
-                                    ->setEndupgrade(new \DateTime('2000-01-01'))
+                                    ->setStartupgrade(null)
+                                    ->setEndupgrade(null)
                                     ->setUpgrading(false);
             $manager->persist($technologiesOwnedAttack);
 
             $technologiesOwnedGold = new technologiesOwned();
             $technologiesOwnedGold->setType($technoGold)
                                 ->setLevel(0)
-                                ->setStartupgrade(new \DateTime('2000-01-01'))
-                                ->setEndupgrade(new \DateTime('2000-01-01'))
+                                ->setStartupgrade(null)
+                                ->setEndupgrade(null)
                                 ->setUpgrading(false);
             $manager->persist($technologiesOwnedGold);
 
@@ -107,8 +107,8 @@ class Recycler extends Fixture
                 $buildingOwned->setType($userBuildingOwned)
                             ->setHp($userBuildingOwned->getHp())
                             ->setLevel(0)
-                            ->setStartupgrade(new \DateTime('2000-01-01'))
-                            ->setEndupgrade(new \DateTime('2000-01-01'))
+                            ->setStartupgrade(null)
+                            ->setEndupgrade(null)
                             ->setUpgrading(false);
                 $manager->persist($buildingOwned);
 

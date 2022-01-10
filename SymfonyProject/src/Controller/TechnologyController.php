@@ -18,16 +18,13 @@ class TechnologyController extends AbstractController
 
         for ($i=0; $i < count($this->getUser()->getUserTechnoOwned()); $i++) {
             $dateNow = new \DateTime('now');
-            $dateBase = new \DateTime('2000-01-01');
             $endUpgrade = $this->getUser()->getUserTechnoOwned()[$i]->getEndupgrade();
 
-            if ($endUpgrade->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s') &&
-                $endUpgrade->format('Y-m-d h:i:s') != $dateBase->format('Y-m-d h:i:s')) {
+            if ($endUpgrade != null && $endUpgrade->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s')) {
                 $this->getUser()->getUserTechnoOwned()[$i]->setUpgrading(False)
-                    ->setEndupgrade($dateBase)
-                    ->setStartupgrade($dateBase)
+                    ->setEndupgrade(null)
+                    ->setStartupgrade(null)
                     ->setLevel($this->getUser()->getUserTechnoOwned()[$i]->getLevel() + 1);
-
                 $em->persist($this->getUser()->getUserTechnoOwned()[$i]);
                 $em->flush();
             }

@@ -18,11 +18,13 @@ class BuildProductionController extends AbstractController
         $needToAddInTime = $this->getUser()->getLastUpdate()->diff($dateNow);
         $needToAddInTime = $needToAddInTime->s + $needToAddInTime->i * 60 + $needToAddInTime->h * 3600 + $needToAddInTime->d * 86400;
         $addGold = $this->getUser()->getGold();
-        $addUnites = $this->getUser()->getGold();
+        $addUnites = $this->getUser()->getUnits();
 
         for ($i=0; $i < count($buildingsOwned); $i++) {
-            $addGold += ($buildingsOwned[$i]->getType()->getGoldPerHour() / 3600) * $needToAddInTime;
-            $addUnites += ($buildingsOwned[$i]->getType()->getUnitesPerHour() / 3600) * $needToAddInTime;
+            if ($buildingsOwned[$i]->getHp()) {
+                $addGold += ($buildingsOwned[$i]->getType()->getGoldPerHour() / 3600) * $needToAddInTime;
+                $addUnites += ($buildingsOwned[$i]->getType()->getUnitesPerHour() / 3600) * $needToAddInTime;
+            }
         }
 
         $this->getUser()->setGold($addGold)

@@ -17,9 +17,18 @@
                     <small class="text-muted">{{ building.type.name }}</small>
                     level :
                     <small class="text-muted">{{ building.level }}</small>
-                    HP :
-                    <small class="text-muted">{{ building.hp }}</small>
                 </h5>
+                <td>
+                    <p class="text-muted">HP : {{ building.hp }}</p>
+                    <div class="progress">
+                        <div
+                            class="bg-danger progress-bar progress-bar-striped progress-bar-animated"
+                            role="progressbar"
+                            aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
+                            style="width: {{ building.hp * 100 / building.type.hp }}%;"
+                        ></div>
+                    </div>
+                </td>
                 <td>
                     <p class="text-muted">gold production per hour : {{ building.type.goldPerHour }}</p>
                     <div class="progress">

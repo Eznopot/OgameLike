@@ -32,6 +32,9 @@ class BatimentOwned
     #[ORM\Column(type: 'integer', nullable: true)]
     private $hp;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $upgradingType;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +108,18 @@ class BatimentOwned
     public function setHp(?int $hp): self
     {
         $this->hp = $hp;
+
+        return $this;
+    }
+
+    public function getUpgradingType(): ?string
+    {
+        return $this->upgradingType;
+    }
+
+    public function setUpgradingType(?string $upgradingType): self
+    {
+        $this->upgradingType = $upgradingType;
 
         return $this;
     }
