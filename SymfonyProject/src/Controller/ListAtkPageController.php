@@ -15,6 +15,7 @@ class ListAtkPageController extends AbstractController
     public function index(): Response
     {
         return $this->render('game/atklist.twig', array(
+            "user" => $this->getUser(),
             'atkList' => $this->getUser()->getOngoingAtks(),
         ));
     }

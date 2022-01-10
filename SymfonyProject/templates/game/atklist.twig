@@ -24,9 +24,17 @@
             </p>
         </div>
     </div>
-    
-    {% for atk in atkList %}
 
+    {% for atk in atkList %}
+    <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+        <div class="card-body">
+            <div class="ongoing-atk">
+                <p class="card-text">Target:</p>
+                <p class="card-text">Success Rate: {{ atk.getSuccessRate() }}%</p>
+                <p class="card-text">Difficulty: {{ atk.getDifficuly() }}</p>
+            </div>
+        </div>
+    </div>
     {% endfor %}
 
 {% endblock %}
