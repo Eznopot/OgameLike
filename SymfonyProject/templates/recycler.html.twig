@@ -92,14 +92,14 @@
                             <a class="nav-link" href={{ path('ladder') }}>Ladder</a>
                         </li>
                     </ul>
-                    <div class="d-flex">
-                        <p id="user_gold" class="test text-warning" style="margin-right: 4px;">
+                    <div class="d-flex" style="text-align: center; align-items: center;">
+                        <p id="user_gold" class="test text-warning" style="margin-right: 4px; margin-bottom: 0px;">
                             {{ user.gold }}
-                            <p class="text-warning" style="margin-right: 16px;">Gold</p>
+                            <p class="text-warning" style="margin-right: 16px; margin-bottom: 0px;">Gold</p>
                         </p>
-                        <p id="user_unites" class="test text-warning" style="margin-right: 4px;">
+                        <p id="user_unites" class="test text-warning" style="margin-right: 4px; margin-bottom: 0px;">
                             {{ user.units }}
-                            <p class="text-warning" style="margin-right: 16px;">Unites</p>
+                            <p class="text-warning" style="margin-right: 16px; margin-bottom: 0px;">Unites</p>
                         </p>
                         {% set prodGoldPerSecond = 0 %}
                         {% set prodUnitePerSecond = 0 %}
@@ -110,7 +110,7 @@
                                 {% set prodUnitePerSecond = prodUnitePerSecond + buildOwned.type.unitesPerHour / 3600 %}
                             {% endif %}
                         {% endfor %}
-                        <p class="text-warning" style="margin-right: 16px;">{{ prodGoldPerSecond | number_format(3, '.', ',') }} Gold/sec</p>
+                        <p class="text-warning" style="margin-right: 16px; margin-bottom: 0px;">{{ prodGoldPerSecond | number_format(3, '.', ',') }} Gold/sec</p>
                         <script type="text/javascript">
                             addGoldUnit(
                                 {{ prodGoldPerSecond | json_encode() | raw }},

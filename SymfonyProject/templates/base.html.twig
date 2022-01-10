@@ -74,9 +74,9 @@
                             <a class="nav-link" href={{ path('ladder') }}>Ladder</a>
                         </li>
                     </ul>
-                    <div class="d-flex">
-                        <p id="user_gold" class="text-warning" style="margin-right: 16px;">{{ user.gold }} Gold</p>
-                        <p id="user_unites" class="text-warning" style="margin-right: 16px;">{{ user.units }} Unites</p>
+                    <div class="d-flex" style="text-align: center; align-items: center;">
+                        <p id="user_gold" class="text-warning" style="margin-right: 16px; margin-bottom: 0px;">{{ user.gold }} Gold</p>
+                        <p id="user_unites" class="text-warning" style="margin-right: 16px; margin-bottom: 0px;">{{ user.units }} Unites</p>
                         {% set prodGoldPerSecond = 0 %}
                         {% set prodUnitePerSecond = 0 %}
 
@@ -86,7 +86,7 @@
                                 {% set prodUnitePerSecond = prodUnitePerSecond + buildOwned.type.unitesPerHour / 3600 %}
                             {% endif %}
                         {% endfor %}
-                        <p class="text-warning">{{ prodGoldPerSecond | number_format(3, '.', ',')}} Gold/sec</p>
+                        <p class="text-warning" style="margin-bottom: 0px;">{{ prodGoldPerSecond | number_format(3, '.', ',')}} Gold/sec</p>
                         <a class="nav-link" href={{ path('connexion_logout') }}>Logout</a>
                         <script type="text/javascript">
                             addGoldUnit(
