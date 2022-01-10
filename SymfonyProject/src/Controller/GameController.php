@@ -55,7 +55,12 @@ class GameController extends AbstractController
             $endOnGoingAtk = $allOnGoingAtk[$i]->getEndTime();
 
             if ($endOnGoingAtk->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s')) {
-                
+                $this->getUser()->setGold($this->getUser()->getGold() + ($allOnGoingAtk[$i]->getPlanetID()->getDefenseLvl() * 100));
+                $allOnGoingAtk[$i]->getPlanetID()->setOngoingAtk(null);
+                $em->persist($allOnGoingAtk[$i]->getPlanetID());
+                unset($this->getUser()->getOngoingAtks()[$i]);
+                $em->persist($this->getUser());
+
             }
         }
 
