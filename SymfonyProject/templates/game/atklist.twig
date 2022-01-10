@@ -1,0 +1,32 @@
+{% extends 'recycler.html.twig' %}
+
+{% block title %}
+    Game!
+{% endblock %}
+
+{% block recycler_name %}Attack{% endblock %}
+{% block recycler_subName %}List of Attacks{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+
+{% block body %}
+<style>
+</style>
+
+    <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+        <div class="card-body">
+            <p class="unit-count card-text">
+                Ongoing attacks: <p id="ongoing-atk"></p>
+            </p>
+        </div>
+    </div>
+    
+    {% for atk in atkList %}
+
+    {% endfor %}
+
+{% endblock %}
