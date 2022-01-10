@@ -24,10 +24,6 @@ class OngoingAtk
     #[ORM\Column(type: 'datetime')]
     private $endTime;
 
-    #[ORM\OneToOne(inversedBy: 'ongoingAtk', targetEntity: Planets::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private $planetID;
-
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'ongoingAtks')]
     private $playerID;
 
@@ -37,9 +33,13 @@ class OngoingAtk
     #[ORM\Column(type: 'integer', nullable: true)]
     private $UnitsAtk;
 
+    #[ORM\ManyToMany(targetEntity: Planets::class, mappedBy: 'ongoingAtk')]
+    private $planets;
+
     public function __construct()
     {
         $this->playerID = new ArrayCollection();
+        $this->planets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -79,18 +79,6 @@ class OngoingAtk
     public function setEndTime(?\DateTimeInterface $endTime): self
     {
         $this->endTime = $endTime;
-
-        return $this;
-    }
-
-    public function getPlanetID(): ?Planets
-    {
-        return $this->planetID;
-    }
-
-    public function setPlanetID(Planets $planetID): self
-    {
-        $this->planetID = $planetID;
 
         return $this;
     }
@@ -139,6 +127,33 @@ class OngoingAtk
     public function setUnitsAtk(?int $UnitsAtk): self
     {
         $this->UnitsAtk = $UnitsAtk;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Planets[]
+     */
+    public function getPlanets(): Collection
+    {
+        return $this->planets;
+    }
+
+    public function addPlanet(Planets $planet): self
+    {
+        if (!$this->planets->contains($planet)) {
+            $this->planets[] = $planet;
+            $planet->addOngoingAtk($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlanet(Planets $planet): self
+    {
+        if ($this->planets->removeElement($planet)) {
+            $planet->removeOngoingAtk($this);
+        }
 
         return $this;
     }

@@ -20,10 +20,10 @@ class TechnologiesOwned
     #[ORM\JoinColumn(nullable: false)]
     private $type;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $startupgrade;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private $endupgrade;
 
     #[ORM\Column(type: 'boolean')]

@@ -24,19 +24,20 @@ class Planets
     #[ORM\Column(type: 'integer', nullable: true)]
     private $distance;
 
-    #[ORM\OneToOne(mappedBy: 'planetID', targetEntity: OngoingAtk::class, cascade: ['persist', 'remove'])]
-    private $ongoingAtk;
-
     #[ORM\OneToMany(mappedBy: 'planet', targetEntity: User::class)]
     private $Players;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $image;
+
+    #[ORM\ManyToMany(targetEntity: OngoingAtk::class, inversedBy: 'planets')]
+    private $ongoingAtk;
     
 
     public function __construct()
     {
         $this->Players = new ArrayCollection();
+        $this->ongoingAtk = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -87,23 +88,6 @@ class Planets
         return false;
     }
 
-    public function getOngoingAtk(): ?OngoingAtk
-    {
-        return $this->ongoingAtk;
-    }
-
-    public function setOngoingAtk(OngoingAtk $ongoingAtk): self
-    {
-        // set the owning side of the relation if necessary
-        if ($ongoingAtk->getPlanetID() !== $this) {
-            $ongoingAtk->setPlanetID($this);
-        }
-
-        $this->ongoingAtk = $ongoingAtk;
-
-        return $this;
-    }
-
     /**
      * @return Collection|User[]
      */
@@ -142,6 +126,30 @@ class Planets
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OngoingAtk[]
+     */
+    public function getOngoingAtk(): Collection
+    {
+        return $this->ongoingAtk;
+    }
+
+    public function addOngoingAtk(OngoingAtk $ongoingAtk): self
+    {
+        if (!$this->ongoingAtk->contains($ongoingAtk)) {
+            $this->ongoingAtk[] = $ongoingAtk;
+        }
+
+        return $this;
+    }
+
+    public function removeOngoingAtk(OngoingAtk $ongoingAtk): self
+    {
+        $this->ongoingAtk->removeElement($ongoingAtk);
 
         return $this;
     }
