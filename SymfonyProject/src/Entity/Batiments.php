@@ -25,7 +25,7 @@ class Batiments
     #[ORM\Column(type: 'integer')]
     private $goldPerHour;
 
-    #[ORM\Column(type: 'blob')]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $image;
 
     #[ORM\Column(type: 'integer')]

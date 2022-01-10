@@ -14,7 +14,7 @@ class PlayerController extends AbstractController
     public function index(): Response
     {
         if ($this->getUser())
-          $image = base64_encode(stream_get_contents($this->getUser()->getImage()));
+          $image = $this->getUser()->getImage();
         else $image = null;
         
         return $this->render('player/index.html.twig', [
