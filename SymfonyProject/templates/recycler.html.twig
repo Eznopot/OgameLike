@@ -33,10 +33,10 @@
                         addUnites += prodUnitePerSecond;
 
                         for (let i = 0; i < userGold.length; i++) {
-                            userGold[i].innerHTML = parseInt(addGold);
+                            userGold[i].innerHTML = parseInt(addGold) + ' Gold';
                         }
                         for (let i = 0; i < userUnites.length; i++) {
-                            userUnites[i].innerHTML = parseInt(addUnites);
+                            userUnites[i].innerHTML = parseInt(addUnites) + ' Unites';
                         }
                     }, 1000);
                 }
@@ -110,13 +110,14 @@
                                 {% set prodUnitePerSecond = prodUnitePerSecond + buildOwned.type.unitesPerHour / 3600 %}
                             {% endif %}
                         {% endfor %}
-                        <p class="text-warning">{{ prodGoldPerSecond | number_format(3, '.', ',') }} Gold/sec</p>
+                        <p class="text-warning" style="margin-right: 16px;">{{ prodGoldPerSecond | number_format(3, '.', ',') }} Gold/sec</p>
                         <script type="text/javascript">
                             addGoldUnit(
                                 {{ prodGoldPerSecond | json_encode() | raw }},
                                 {{ prodUnitePerSecond | json_encode() | raw }}
                             );
                         </script>
+                        <a class="nav-link" href={{ path('connexion_logout') }}>Logout</a>
                     </div>
                 </div>
             </div>

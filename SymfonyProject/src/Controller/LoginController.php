@@ -27,6 +27,9 @@ class LoginController extends AbstractController
         $this->loginService = new LoginServices();
     }
 
+    #[Route('/logout', name: 'connexion_logout', methods: ['GET'])]
+    public function logout() {}
+
     /**
      * @Route("/login", name="connexion_login")
      */
