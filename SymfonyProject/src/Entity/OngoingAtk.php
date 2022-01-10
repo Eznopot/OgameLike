@@ -34,6 +34,9 @@ class OngoingAtk
     #[ORM\Column(type: 'integer')]
     private $SuccessRate;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $UnitsAtk;
+
     public function __construct()
     {
         $this->playerID = new ArrayCollection();
@@ -124,6 +127,18 @@ class OngoingAtk
     public function setSuccessRate(int $SuccessRate): self
     {
         $this->SuccessRate = $SuccessRate;
+
+        return $this;
+    }
+
+    public function getUnitsAtk(): ?int
+    {
+        return $this->UnitsAtk;
+    }
+
+    public function setUnitsAtk(?int $UnitsAtk): self
+    {
+        $this->UnitsAtk = $UnitsAtk;
 
         return $this;
     }

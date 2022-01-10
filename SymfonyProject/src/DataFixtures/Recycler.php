@@ -102,8 +102,10 @@ class Recycler extends Fixture
                 ->setlastUpdate(new \DateTime('now'));
 
             for ($j=0; $j < rand(2, 7); $j++) {
+                $userBuildingOwned = $allBuilding[rand(0, 9)];
                 $buildingOwned = new BatimentOwned();
-                $buildingOwned->setType($allBuilding[rand(0, 9)])
+                $buildingOwned->setType($userBuildingOwned)
+                            ->setHp($userBuildingOwned->getHp())
                             ->setLevel(0)
                             ->setStartupgrade(new \DateTime('2000-01-01'))
                             ->setEndupgrade(new \DateTime('2000-01-01'))

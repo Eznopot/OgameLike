@@ -49,17 +49,44 @@ class GameController extends AbstractController
         $planetId = $request->request->get('planetID');
 
         $allOnGoingAtk = $this->getUser()->getOngoingAtks();
+
         for ($i=0; $i < $allOnGoingAtk->count(); $i++) {
             $dateNow = new \DateTime('now');
             $dateBase = new \DateTime('2000-01-01');
             $endOnGoingAtk = $allOnGoingAtk[$i]->getEndTime();
 
             if ($endOnGoingAtk->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s')) {
-                $this->getUser()->setGold($this->getUser()->getGold() + ($allOnGoingAtk[$i]->getPlanetID()->getDefenseLvl() * 100));
-                $allOnGoingAtk[$i]->getPlanetID()->setOngoingAtk(null);
-                $em->persist($allOnGoingAtk[$i]->getPlanetID());
-                unset($this->getUser()->getOngoingAtks()[$i]);
-                $em->persist($this->getUser());
+
+                $uniteAtk = $allOnGoingAtk[$i]->getSuccessRate() - $allOnGoingAtk[$i]->getUnitsAtk();
+
+                $allBuildUserEnemi = array();
+                $planetAtk = $allOnGoingAtk[$i]->getPlanetId();
+                for ($i=0; $i < $planetAtk->getPlayers()->count(); $i++) {
+                    $BuildUserEnemie = $planetAtk->getPlayers()[$i]->getBatimentsOwned();
+                    for ($j=0; $j < $BuildUserEnemie->count(); $j++) {
+                        $allBuildUserEnemi->array_push($BuildUserEnemie[$j]);
+                    }
+                }
+
+                while ($uniteAtk) {
+                    $BuildUserEnemi = $allBuildUserEnemi[rand(0, $allBuildUserEnemi->count())];
+                    if ($BuildUserEnemi->getHp()) {
+                        $BuildUserEnemi->setHp($BuildUserEnemi->getHp() - 1);
+                        $em->persist($BuildUserEnemi);
+                        $uniteAtk--;
+                    }
+                }
+
+                // for ($i=0; $i < $this->getUser()->getBatimentsOwned()->count(); $i++) {
+
+                // }
+
+
+                // $this->getUser()->setGold($this->getUser()->getGold() + ($allOnGoingAtk[$i]->getPlanetID()->getDefenseLvl() * 100));
+                // $allOnGoingAtk[$i]->getPlanetID()->setOngoingAtk(null);
+                // $em->persist($allOnGoingAtk[$i]->getPlanetID());
+                // unset($this->getUser()->getOngoingAtks()[$i]);
+                // $em->persist($this->getUser());
 
             }
         }
@@ -71,7 +98,7 @@ class GameController extends AbstractController
             $diffDistance = ($diffDistance < 0) ? $diffDistance * -1 : $diffDistance;
 
             $endAtk = new \DateTime('now');
-            $endAtk->add(new \DateInterval('PT'.$diffDistance.'S'));
+            $endAtk->add(new \DateInterval('PT'.intval($diffDistance / 100).'S'));
 
             $damagePlanetAtk = 0;
             $hpPlanetAtk = 0;
@@ -84,13 +111,16 @@ class GameController extends AbstractController
                 }
             }
 
+            dump($hpPlanetAtk);
+
             $ongoinAtk = new OngoingAtk();
             $ongoinAtk->setDifficuly($hpPlanetAtk)
                 ->setSuccessRate($damagePlanetAtk)
                 ->setStart(new \DateTime('now'))
                 ->setEndTime($endAtk)
                 ->addPlayerID($this->getUser())
-                ->setPlanetID($planetAtk);
+                ->setPlanetID($planetAtk)
+                ->setUnitsAtk($unitsNbr);
             $em->persist($ongoinAtk);
         }
         $em->flush();

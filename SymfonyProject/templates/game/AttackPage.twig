@@ -56,7 +56,15 @@
                     {% set distanceFromYou = planet.getDistance() - user.planet.distance() %}
                     <p class="card-text">Distance from you: {{ distanceFromYou < 0 ? distanceFromYou * -1 : distanceFromYou }}</p>
                     {% if planet.id != user.planet.id %}
-                        {% if planet.isUnderAtk() %}
+                        {% set isUnderAtk = false %}
+                        {% set UserAtks = null %}
+                        {% for UserongoingAtks in user.ongoingAtks %}
+                            {% if UserongoingAtks.planetID.id == planet.id %}
+                                {% set UserAtks = UserongoingAtks %}
+                                {% set isUnderAtk = true %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if isUnderAtk %}
                             <p class="card-text">Is under attack: Yes</p>
                             <div class="progress">
                                 <div
@@ -70,8 +78,8 @@
                                 <script type="text/javascript">
                                     addWidthProgressBar(
                                         {{ planet.id | json_encode() | raw }},
-                                        {{ date().diff(date(myBuilding.endupgrade)) | json_encode() | raw }},
-                                        {{ date().diff(date('now')) | json_encode() | raw }}
+                                        {{ date(UserAtks.start).diff(date(UserAtks.endTime)) | json_encode() | raw }},
+                                        {{ date(UserAtks.start).diff(date('now')) | json_encode() | raw }}
                                     );
                                 </script>
                             </div>
