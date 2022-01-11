@@ -32,8 +32,8 @@ class RegisterServices
             $user->setUsername($form->get('Email')->getData());
             $hash = $encoder->encodePassword($user, $form->get('Password')->getData());
             $user->setPassword($hash);
-            $user->setGold(0);
-            $user->setUnits(0);
+            $user->setGold(50);
+            $user->setUnits(10);
             $user->setElo(1000);
             $user->setPlanet($doctrine->getRepository(Planets::class)->findOneBy(['id' => $form->get('Planet')->getData()]));
             $user->setLastUpdate(new \DateTime());
