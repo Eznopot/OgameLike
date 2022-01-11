@@ -77,6 +77,8 @@ class ManagerServices
                     $uniteAtk = $allOnGoingAtk[$i]->getUnitsAtk();
                 }
 
+                $allOnGoingAtk[$i]->setUnitesRealyAtk($uniteAtk);
+
                 $allBuildUserEnemi = array();
                 $planetAtk = $allOnGoingAtk[$i]->getPlanets();
                 for ($j=0; $j < $planetAtk->getPlayers()->count(); $j++) {
@@ -85,8 +87,6 @@ class ManagerServices
                         $allBuildUserEnemi[] = $BuildUserEnemie[$k];
                     }
                 }
-
-                dump($uniteAtk);
 
                 while ($uniteAtk > 0) {
                     $planetDeafet = true;
@@ -97,13 +97,19 @@ class ManagerServices
                     }
                     if ($planetDeafet)
                         break;
+
                     $BuildUserEnemi = $allBuildUserEnemi[rand(0, count($allBuildUserEnemi) - 1)];
+
                     if ($BuildUserEnemi->getHp()) {
-                        $BuildUserEnemi->setHp($BuildUserEnemi->getHp() - 1);
+                        $BuildUserEnemi->setHp(
+                            $BuildUserEnemi->getHp() -
+                            (1 + $allOnGoingAtk[$i]->getTechnologiesBonus() / 10)
+                        );
                         $em->persist($BuildUserEnemi);
-                        $uniteAtk--;
+                        $uniteAtk = $uniteAtk - 1;
                     }
                 }
+
                 $user->setUnits($user->getUnits() + $uniteAtk);
                 $allOnGoingAtk[$i]->setIdEnded(true);
                 $em->persist($allOnGoingAtk[$i]);

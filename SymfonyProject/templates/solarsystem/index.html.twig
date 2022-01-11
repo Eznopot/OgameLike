@@ -1,0 +1,108 @@
+{% extends 'recycler.html.twig' %}
+
+{% block title %}Solarsystem!{% endblock %}
+
+{% block recycler_name %} Solar System {% endblock %}
+{% block recycler_subName %} Solar System {% endblock %}
+{% block recycler_explenation %} here you can see the Solar System and all the attack {% endblock %}
+
+{% block body %}
+    {% for planet in allPlanet %}
+        {% set distanceTravel = user.planet.distance - planet.distance %}
+        {% set nbPlayerOnPlanet = 0 %}
+        {% set hpOnPlanet = 0 %}
+        {% set hpMaxOnPlanet = 0 %}
+        {% set hpPrctPlanet = 0 %}
+        {% set damageOnPlanet = 0 %}
+        {% set bonusDamageTechno = 0 %}
+        {% for userOnPlanet in planet.players %}
+            {% set nbPlayerOnPlanet = nbPlayerOnPlanet + 1 %}
+            {% for technologiesOwned in userOnPlanet.userTechnoOwned %}
+                {% set bonusDamageTechno = bonusDamageTechno + technologiesOwned.level * technologiesOwned.type.DamagePerLevel %}
+            {% endfor %}
+            {% for buildingPlayer in userOnPlanet.batimentsOwned %}
+                {% set hpMaxOnPlanet = hpMaxOnPlanet + buildingPlayer.type.hp %}
+                {% set hpOnPlanet = hpOnPlanet + buildingPlayer.hp %}
+                {% if buildingPlayer.hp > 0 %}
+                    {% set damageOnPlanet = damageOnPlanet + buildingPlayer.type.damage + buildingPlayer.level * buildingPlayer.type.DamagePerLvl + bonusDamageTechno %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+        {% set hpPrctPlanet = hpOnPlanet * 100 / hpMaxOnPlanet %}
+
+        <table class="table table-hover">
+            <tbody>
+                <tr class="table-dark">
+                    <th scope="row">
+                        <img src={{ planet.image }}>
+                    </th>
+                    <td>
+                        <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+                            <div class="card-header">{{ planet.getName() }}</div>
+                            <div class="card-body">
+                                <h4 class="card-title">Information :</h4>
+                                <p class="card-text">Distance: {{ planet.distance }} -> {{ distanceTravel < 0 ? distanceTravel * -1 : distanceTravel }}</p>
+                                <p class="card-text">Player number: {{ nbPlayerOnPlanet }}</p>
+                                <p class="card-text">damage : {{ damageOnPlanet }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="progress" style="width: 400px;">
+                            <div
+                                class="progress-bar progress-bar-striped bg-danger" 
+                                role="progressbar"
+                                style="width: {{ hpPrctPlanet }}%;"
+                                aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
+                            >
+                            {{ hpOnPlanet }}/{{ hpMaxOnPlanet }}
+                            </div>
+                        </div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">User name</th>
+                                    <th scope="col">Unites</th>
+                                    <th scope="col">Technologies</th>
+                                    <th scope="col">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for onGoingAtk in planet.ongoingAtk %}
+                                    <tr class="table-primary">
+                                        <th scope="row">{{ onGoingAtk.playerID.username }}</th>
+                                        <td>{{ onGoingAtk.unitesRealyAtk }}/{{ onGoingAtk.unitsAtk }}</td>
+                                        <td>{{ onGoingAtk.technologiesBonus }}</td>
+                                        <td>{{ onGoingAtk.start | date }}</td>
+                                        {% if not onGoingAtk.idEnded %}
+                                            <td>
+                                                <div class="progress" style="width: 100px;">
+                                                    <div
+                                                        id="progress_bar_{{ onGoingAtk.id }}"
+                                                        class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+                                                        role="progressbar"
+                                                        aria-valuenow="75"
+                                                        aria-valuemin="0"
+                                                        aria-valuemax="100"
+                                                        style="width:0%;" ></div>
+                                                    <script type="text/javascript">
+                                                        addWidthProgressBar(
+                                                            {{ onGoingAtk.id | json_encode() | raw }},
+                                                            {{ date(onGoingAtk.start).diff(date(onGoingAtk.endTime)) | json_encode() | raw }},
+                                                            {{ date(onGoingAtk.start).diff(date('now')) | json_encode() | raw }}
+                                                        );
+                                                    </script>
+                                                </div>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endfor %}
+{% endblock %}

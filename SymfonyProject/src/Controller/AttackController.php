@@ -45,13 +45,41 @@ class AttackController extends AbstractController
 
             $damagePlanetAtk = 0;
             $hpPlanetAtk = 0;
+            $addDamageTechnoEnemie = 0;
             for ($i=0; $i < $planetAtk->getPlayers()->count(); $i++) {
-                $BuildUserEnemie = $planetAtk->getPlayers()[$i]->getBatimentsOwned();
+                $userEnemie = $planetAtk->getPlayers()[$i];
+
+                for ($j=0; $j < count($userEnemie->getUserTechnoOwned()); $j++) {
+                    $technoUserEnnemie = $userEnemie->getUserTechnoOwned()[$j];
+                    $addDamageTechnoEnemie = (
+                        $technoUserEnnemie->getLevel() * 
+                        $technoUserEnnemie->getType()->getDamagePerLevel()
+                    );
+                }
+
+                $BuildUserEnemie = $userEnemie->getBatimentsOwned();
                 for ($j=0; $j < $BuildUserEnemie->count(); $j++) {
                     $statBuild = $BuildUserEnemie[$j]->getType();
-                    $damagePlanetAtk += $statBuild->getDamage() + ($statBuild->getDamagePerLvl() * $BuildUserEnemie[$j]->getLevel());
-                    $hpPlanetAtk += $BuildUserEnemie[$j]->getHp();
+                    if ($statBuild->getHp() > 0) {
+                        $damagePlanetAtk += (
+                            $statBuild->getDamage() + 
+                            ($statBuild->getDamagePerLvl() * $statBuild->getLevel() + 
+                            $addDamageTechnoEnemie)
+                        );
+                        $hpPlanetAtk += $statBuild->getHp();
+                    }
                 }
+            }
+
+            $addDamageTechno = 0;
+            for ($i=0; $i < $this->getUser()->getUserTechnoOwned()->count(); $i++) { 
+                $technoUser = $this->getUser()->getUserTechnoOwned()[$i];
+                $addDamageTechno = (
+                    $addDamageTechno +
+                    $technoUser->getType()->getDamage() +
+                    $technoUser->getLevel() * 
+                    $technoUser->getType()->getDamagePerLevel()
+                );
             }
 
             $ongoinAtk = new OngoingAtk();
@@ -62,7 +90,8 @@ class AttackController extends AbstractController
                 ->setPlayerID($this->getUser())
                 ->setPlanets($planetAtk)
                 ->setUnitsAtk($unitsNbr)
-                ->setIdEnded(false);
+                ->setIdEnded(false)
+                ->setTechnologiesBonus($addDamageTechno);
 
             $this->getUser()->setUnits($this->getUser()->getUnits() - $unitsNbr);
             $em->persist($this->getUser());

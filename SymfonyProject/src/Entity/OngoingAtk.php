@@ -41,6 +41,12 @@ class OngoingAtk
     #[ORM\Column(type: 'boolean')]
     private $IdEnded;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $TechnologiesBonus;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $UnitesRealyAtk;
+
     public function __construct()
     {
         $this->playerID = new ArrayCollection();
@@ -144,6 +150,30 @@ class OngoingAtk
     public function setIdEnded(bool $IdEnded): self
     {
         $this->IdEnded = $IdEnded;
+
+        return $this;
+    }
+
+    public function getTechnologiesBonus(): ?int
+    {
+        return $this->TechnologiesBonus;
+    }
+
+    public function setTechnologiesBonus(?int $TechnologiesBonus): self
+    {
+        $this->TechnologiesBonus = $TechnologiesBonus;
+
+        return $this;
+    }
+
+    public function getUnitesRealyAtk(): ?int
+    {
+        return $this->UnitesRealyAtk;
+    }
+
+    public function setUnitesRealyAtk(?int $UnitesRealyAtk): self
+    {
+        $this->UnitesRealyAtk = $UnitesRealyAtk;
 
         return $this;
     }
