@@ -86,7 +86,9 @@ class ManagerServices
                     }
                 }
 
-                while ($uniteAtk) {
+                dump($uniteAtk);
+
+                while ($uniteAtk > 0) {
                     $planetDeafet = true;
                     for ($j=0; $j < count($allBuildUserEnemi); $j++) {
                         if ($allBuildUserEnemi[$j]->getHp()) {
@@ -102,7 +104,7 @@ class ManagerServices
                         $uniteAtk--;
                     }
                 }
-                $user->setUnits($uniteAtk);
+                $user->setUnits($user->getUnits() + $uniteAtk);
                 $allOnGoingAtk[$i]->setIdEnded(true);
                 $em->persist($allOnGoingAtk[$i]);
                 $em->persist($user);
