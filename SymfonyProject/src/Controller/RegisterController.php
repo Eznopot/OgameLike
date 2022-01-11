@@ -37,7 +37,6 @@ class RegisterController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
             if ($form->getClickedButton() === $form->get('confirmer')) {
-                print_r("test");
                 try {
                     $res = $this->registerService->registerRequest($form, $doctrine, $encoder);
                     if ($res === 0) {
