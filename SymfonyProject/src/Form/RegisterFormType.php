@@ -7,8 +7,10 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use App\Entity\Planets;
 
 class RegisterFormType extends  AbstractType
 {
@@ -40,6 +42,18 @@ class RegisterFormType extends  AbstractType
                     ))
                 )
             ))
+            ->add('Planet', ChoiceType::class, [
+              'choices' => array(
+                'Mercure' => 1,
+                'Venus' => 2,
+                'Terre' => 3,
+                'Mars' => 4,
+                'Jupiter' => 5,
+                'Saturne' => 6,
+                'Uranus' => 7,
+                'Neptune' => 8,
+              ),
+            ])
             ->add('confirmer', SubmitType::class, array(
                 'label' => 'Confirmer',
                 'attr' => array(

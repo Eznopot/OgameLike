@@ -7,6 +7,7 @@ use Symfony\Component\Form\Exception\ExceptionInterface;
 use Symfony\Component\Form\Form;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Entity\Planets;
 
 class RegisterServices
 {
@@ -30,11 +31,12 @@ class RegisterServices
             $user = new User();
             $user->setUsername($form->get('Email')->getData());
             $hash = $encoder->encodePassword($user, $form->get('Password')->getData());
-            print_r($hash);
             $user->setPassword($hash);
             $user->setGold(0);
             $user->setUnits(0);
-            $user->setElo(0);
+            $user->setElo(1000);
+            $user->setPlanet($doctrine->getRepository(Planets::class)->findOneBy(['id' => $form->get('Planet')->getData()]));
+            $user->setLastUpdate(new \DateTime());
             $entityManager->persist($user);
             $entityManager->flush();
             return 0;
