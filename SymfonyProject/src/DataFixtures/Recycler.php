@@ -44,7 +44,7 @@ class Recycler extends Fixture
                 ->setDamage(0)
                 ->setGoldBoost(0)
                 ->setDamagePerLevel(0)
-                ->setGoldBoostPerLevel(10)
+                ->setGoldBoostPerLevel(5)
                 ->setUpgradeTime(10);
         $manager->persist($technoGold);
 
@@ -124,7 +124,8 @@ class Recycler extends Fixture
             $planet = new Planets();
             $planet->setName($planetId[$i])
                 ->setDefenseLvl(rand(1, 5))
-                ->setDistance(($i + 1) * rand(1000, 2000));
+                ->setDistance(($i + 1) * rand(1000, 2000))
+                ->setImage('https://live.staticflickr.com/197/447182941_dc272887ee_m.jpg');
             $allPlanet[] = $planet;
         }
 

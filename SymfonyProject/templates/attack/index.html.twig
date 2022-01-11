@@ -8,32 +8,10 @@
 {% block recycler_subName %}List of planets{% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript">
-        if (window.history.replaceState) {
-            window.history.replaceState( null, null, window.location.href );
-        }
 
-        function getRandomColor(id) {
-
-            let letters = '0123456789ABCDEF';
-            let randomColor = '#' ;
-            for (let i = 0; i < 6; i++) {
-                randomColor += letters[Math.floor(Math.random() * 16)];
-            }
-            document.getElementById(id).style['background-color'] = randomColor;
-        }
-    </script>
 {% endblock %}
 
 {% block body %}
-    <style>
-        .dot {
-            height: 25px;
-            width: 25px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-    </style>
 
     <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
         <div class="card-body">
@@ -43,13 +21,13 @@
     </div>
     </div>
     {% for planet in planetList %}
-        <div class="card text-white bg-primary mb-3" style="margin: 0 auto; width: 20rem;">
+        <div class="card text-white bg-secondary mb-3" style="margin: 0 auto; width: 20rem;">
             <div class="card-body">
                 <div class="planet">
+                    <img src={{ planet.image }}>
+
                     <span id="color_planet_{{planet.id}}" class="dot"></span>
-                    <script type="text/javascript">
-                        getRandomColor("color_planet_" + {{planet.id | json_encode() | raw }});
-                    </script>
+
                     <p class="card-text">Name: {{ planet.getName() }}</p>
                     <p class="card-text">Defense level: {{ planet.getDefenseLvl() }}</p>
                     <p class="card-text">Distance: {{ planet.distance() }}</p>
@@ -85,7 +63,7 @@
                             </div>
                         {% else %}
                             <p class="card-text">Is under attack: No</p>
-                            <form action="{{ path('attack_page') }}" method="post">
+                            <form action="{{ path('attack') }}" method="post">
                                 <input
                                     type="range"
                                     name="Units"

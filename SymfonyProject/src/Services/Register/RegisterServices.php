@@ -29,7 +29,6 @@ class RegisterServices
         } else {
             $user = new User();
             $user->setUsername($form->get('Email')->getData());
-            //$user->setPassword($form->get('Password')->getData());
             $hash = $encoder->encodePassword($user, $form->get('Password')->getData());
             print_r($hash);
             $user->setPassword($hash);

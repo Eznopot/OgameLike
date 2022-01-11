@@ -8,70 +8,69 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Batiments;
 use App\Entity\BatimentOwned;
+use App\Services\ManagerServices;
 
 class BuildBuyController extends AbstractController
 {
+    /** @var ManagerServices $ManagerServices */
+    private $ManagerServices;
+
+    public function __construct()
+    {
+        $this->ManagerServices = new ManagerServices();
+    }
+
     #[Route('/build/buy', name: 'build_buy')]
     public function index(): Response
     {
+        $this->ManagerServices->AllUpdater(
+            $this->getDoctrine(),
+            $this->getUser()
+        );
+
         $em = $this->getDoctrine()->getManager();
         $request = Request::createFromGlobals();
         $buyId = $request->request->get('buy');
         $upgradeId = $request->request->get('upgrade');
 
-        for ($i=0; $i < count($this->getUser()->getBatimentsOwned()); $i++) {
-            $dateNow = new \DateTime('now');
-            $buildOwned = $this->getUser()->getBatimentsOwned()[$i];
-            $endUpgrade = $buildOwned->getEndupgrade();
+        if ($buyId !== null) {
+            $buildBuy = $this->getDoctrine()->getRepository(Batiments::class)->find($buyId);
 
-            if ($endUpgrade != null && $endUpgrade->format('Y-m-d h:i:s') < $dateNow->format('Y-m-d h:i:s')) {
+            if ($this->getUser()->getGold() >= $buildBuy->getPrice()) {
+                $endUpgrade = new \DateTime('now');
+                $endUpgrade->add(new \DateInterval('PT'.$buildBuy->getUpgradeTime().'S'));
 
-                if ($buildOwned->getUpgradingType() == 'Upgrading') {
-                    $buildOwned->setLevel($buildOwned->getLevel() + 1);
+                $levelBuild = 0;
+                for ($i=0; $i < count($this->getUser()->getBatimentsOwned()); $i++) {
+                    if ($this->getUser()->getBatimentsOwned()[$i]->getType()->getId() == $buyId) {
+                        $levelBuild = $this->getUser()->getBatimentsOwned()[$i]->getLevel();
+                        break;
+                    }
                 }
 
-                $buildOwned->setUpgrading(False)
-                    ->setEndupgrade(null)
-                    ->setStartupgrade(null)
-                    ->setUpgradingType(null);
+                $newBuild = new BatimentOwned($buildBuy);
+                $newBuild->setType($buildBuy)
+                        ->setLevel($levelBuild)
+                        ->setStartupgrade(new \DateTime('now'))
+                        ->setEndupgrade($endUpgrade)
+                        ->setUpgrading(True)
+                        ->setHp($buildBuy->getHp() + ($buildBuy->getHpPerLvl() * $newBuild->getLevel()))
+                        ->setUpgradingType('Buy');
+                $em->persist($newBuild);
 
-                $em->persist($buildOwned);
+                $this->getUser()->addBatimentsOwned($newBuild);
+
+                $this->getUser()->setGold($this->getUser()->getGold() - $buildBuy->getPrice());
+                $em->persist($this->getUser());
                 $em->flush();
             }
         }
 
-        if ($buyId !== null) {
-            $buildBuy = $this->getDoctrine()->getRepository(Batiments::class)->find($buyId);
-
-            $endUpgrade = new \DateTime('now');
-            $endUpgrade->add(new \DateInterval('PT'.$buildBuy->getUpgradeTime().'S'));
-
-            $levelBuild = 0;
-            for ($i=0; $i < count($this->getUser()->getBatimentsOwned()); $i++) {
-                if ($this->getUser()->getBatimentsOwned()[$i]->getType()->getId() == $buyId) {
-                    $levelBuild = $this->getUser()->getBatimentsOwned()[$i]->getLevel();
-                    break;
-                }
-            }
-
-            $newBuild = new BatimentOwned($buildBuy);
-            $newBuild->setType($buildBuy)
-                    ->setLevel($levelBuild)
-                    ->setStartupgrade(new \DateTime('now'))
-                    ->setEndupgrade($endUpgrade)
-                    ->setUpgrading(True)
-                    ->setHp($buildBuy->getHp() + ($buildBuy->getHpPerLvl() * $newBuild->getLevel()))
-                    ->setUpgradingType('Buy');
-            $em->persist($newBuild);
-
-            $this->getUser()->addBatimentsOwned($newBuild);
-
-            $em->flush();
-        }
-
         if ($upgradeId !== null) {
             for ($i=0; $i < count($this->getUser()->getBatimentsOwned()); $i++) {
-                if ($this->getUser()->getBatimentsOwned()[$i]->getType()->getId() == $upgradeId) {
+                if ($this->getUser()->getBatimentsOwned()[$i]->getType()->getId() == $upgradeId &&
+                    $this->getUser()->getGold() >= $this->getUser()->getBatimentsOwned()[$i]->getType()->getPrice()) {
+
                     $upgradeTime = $this->getUser()->getBatimentsOwned()[$i]->getType()->getUpgradeTime();
                     $endUpgrade = new \DateTime('now');
                     $endUpgrade->add(new \DateInterval('PT'.$upgradeTime.'S'));
@@ -105,10 +104,11 @@ class BuildBuyController extends AbstractController
                 array_push($goldBuilding, $build);
             }
         }
+
         $category = array(
-            'gold',
-            'unite',
-            'damage'
+            'Gold',
+            'Unite',
+            'Damage'
         );
         return $this->render('build_buy/index.html.twig', [
             'user' => $this->getUser(),

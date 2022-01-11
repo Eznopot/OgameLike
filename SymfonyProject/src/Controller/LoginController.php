@@ -35,27 +35,7 @@ class LoginController extends AbstractController
      */
     public function login(Request $request, ManagerRegistry $doctrine, AuthenticationUtils $authenticationUtils): Response
     {
-        /** @var Form $form */
-        //$form = $this->createForm(LoginFormType::class);
-        //$form->handleRequest($request);
-        /*if($form->isSubmitted() && $form->isValid()) {
-            if ($form->getClickedButton() === $form->get('confirmer')) {
-                try {
-                    //$result = $this->loginService->loginRequest($form, $doctrine);
-                    if ($result === 0) {
-                        $this->addFlash("success", "Logged in");
-                        return $this->redirectToRoute("home");
-                    } else {
-                        $this->addFlash("Error", "Not Exist");
-                    }
-                } catch (ExceptionInterface $exception) {
-                    $this->addFlash("error", $exception->getMessage());
-                }
-            }
-        }*/
-
         return $this->render('login/index.html.twig', array(
-            //"createLoginForm" => $form->createView()
         ));
     }
 }

@@ -5,12 +5,26 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Services\ManagerServices;
 
 class HomeController extends AbstractController
 {
+    /** @var ManagerServices $ManagerServices */
+    private $ManagerServices;
+
+    public function __construct()
+    {
+        $this->ManagerServices = new ManagerServices();
+    }
+
     #[Route('/home', name: 'home')]
     public function index(): Response
     {
+        $this->ManagerServices->AllUpdater(
+            $this->getDoctrine(),
+            $this->getUser()
+        );
+
         $user = $this->getUser();
         $income = 0;
         $technoOwned = $user->getUserTechnoOwned();

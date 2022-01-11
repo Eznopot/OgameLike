@@ -6,7 +6,6 @@
 {% block recycler_subName %} Upgrade your Technologies {% endblock %}
 {% block recycler_explenation %} here you can upgrade your technologies, that can have a big effect on your build or unites {% endblock %}
 
-
 {% block body %}
   <div style="flex-wrap: wrap; display: flex;">
     {% for techno in technoOwned %}
@@ -15,6 +14,7 @@
             <div class="card-body">
                 <p class="card-title">{{ techno.type.description }}</p>
                 <p class="card-text">dmg : {{ techno.type.damagePerLevel }} | gold : {{ techno.type.goldBoostPerLevel }} </p>
+                <p class="card-text">level : {{ techno.level }} </p>
             </div>
 
             <div class="progress m-3">
